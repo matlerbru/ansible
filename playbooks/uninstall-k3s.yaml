@@ -1,0 +1,17 @@
+- name: Setup kubernetes cluster
+  hosts: kubernetesMasterNodes:kubernetesWorkerNodes
+  vars_files:
+    - ../vars/vault.yaml
+    - ../vars/kubernetes.yaml
+
+  tasks: 
+
+  - name: Remove k3s
+    ansible.builtin.shell: /usr/local/bin/k3s-uninstall.sh
+    become: true
+    ignore_errors: yes
+
+  - name: Remove k3s-agent
+    ansible.builtin.shell: /usr/local/bin/k3s-agent-uninstall.sh
+    become: true
+    ignore_errors: yes

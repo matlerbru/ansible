@@ -1,0 +1,34 @@
+- name: Install packages on kubernetes nodes
+  hosts: kubernetesMasterNodes:kubernetesWorkerNodes
+  gather_facts: false
+  become: true
+
+  tasks:
+
+    - name: Add kubernetes repo
+      ansible.builtin.shell: |
+        sudo bash -c 'echo "[kubernetes]
+        name=Kubernetes
+        baseurl=https://pkgs.k8s.io/core:/stable:/v1.31/rpm/
+        enabled=1
+        gpgcheck=1
+        gpgkey=https://pkgs.k8s.io/core:/stable:/v1.31/rpm/repodata/repomd.xml.key" > /etc/yum.repos.d/kubernetes.repo'
+
+    - name: Install generic packages
+      yum:
+        name:
+          - nfs-utils
+          - kubectl
+          - helm
+        state: present
+
+    - name: Install kubeseal
+      ansible.builtin.shell: |
+        KUBESEAL_VERSION=$(curl -s https://api.github.com/repos/bitnami-labs/sealed-secrets/tags | jq -r '.[0].name' | cut -c 2-) &&
+        if [ -z "$KUBESEAL_VERSION" ]; then
+          echo "Failed to fetch the latest KUBESEAL_VERSION"
+          exit 1
+        fi
+        curl -OL "https://github.com/bitnami-labs/sealed-secrets/releases/download/v${KUBESEAL_VERSION}/kubeseal-${KUBESEAL_VERSION}-linux-amd64.tar.gz"
+        tar -xvzf kubeseal-${KUBESEAL_VERSION}-linux-amd64.tar.gz kubeseal
+        sudo install -m 755 kubeseal /usr/local/bin/kubeseal

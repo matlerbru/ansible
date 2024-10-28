@@ -1,0 +1,11 @@
+configs:
+  gitea.priv:
+    auth:
+      username: {{ dockerRegistry.username }}
+      password: {{ dockerRegistry.password }}
+    tls:
+      insecure_skip_verify: true
+  ghcr.io:
+    auth:
+      username: {{ ghcr.username }}
+      password: {{ ghcr.password }}

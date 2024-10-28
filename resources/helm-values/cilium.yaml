@@ -1,0 +1,10 @@
+
+hubble:
+  relay:  
+    enabled: true
+  ui:
+    enabled: true
+    ingress:
+      enabled: true
+      hosts:
+        - hubble.priv

@@ -1,0 +1,8 @@
+
+metallb:
+  addressRange: "192.168.1.200-192.168.1.249"
+  peerName: edge-router
+  peerAsn: 64512
+  peerAddress: 192.168.1.1
+
+defaultUser: mlb

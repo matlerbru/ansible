@@ -1,0 +1,91 @@
+
+- name: Setup metallb
+  hosts: kubernetesMasterNodes
+  vars_files:
+  - ../vars/kubernetes.yaml
+
+  tasks:
+
+    - block:
+
+      - name: Add metallb helm repo
+        ansible.builtin.shell: |
+          helm repo add metallb https://metallb.github.io/metallb && \
+          helm repo update
+
+      - name: Check if namespace exists
+        ansible.builtin.shell:
+          kubectl get namespace | grep metallb-system || echo ""
+        register: namespace_exists
+
+      - name: Create metallb-system namespace
+        ansible.builtin.shell: |
+          kubectl create ns metallb-system
+        when: namespace_exists.stdout == ""
+
+      - name: Install metallb helm chart
+        ansible.builtin.shell: |
+          helm upgrade --install metallb \
+          metallb/metallb --version 0.14.8 \
+          --namespace metallb-system
+
+      - name: Wait for metallb to run
+        ansible.builtin.shell: kubectl get po -n metallb-system | grep -E "metallb-controller-.*1/1" || echo ""
+        register: cilium_status
+        ignore_errors: yes
+        retries: 12
+        delay: 5
+        until: cilium_status.stdout != ""
+
+      - name: Create ip-address pool
+        ansible.builtin.shell: |
+          echo " 
+          apiVersion: metallb.io/v1beta1
+          kind: IPAddressPool
+          metadata:
+            name: pool
+            namespace: metallb-system
+          spec:
+            addresses:
+            - {{ metallb.addressRange }}" | kubectl apply -f -
+
+      - name: Create BGPadvertisement
+        ansible.builtin.shell: |
+          echo " 
+          apiVersion: metallb.io/v1beta1
+          kind: BGPAdvertisement
+          metadata:
+            name: advertiser
+            namespace: metallb-system
+          spec:
+            ipAddressPools:
+            - pool" | kubectl apply -f -
+
+      - name: Create L2Advertisement
+        ansible.builtin.shell: |
+          echo " 
+          apiVersion: metallb.io/v1beta1
+          kind: L2Advertisement
+          metadata:
+            name: l2-adviertisement
+            namespace: metallb-system
+          spec:
+            ipAddressPools:
+            - pool" | kubectl apply -f -
+
+      - name: Create BGP peer
+        ansible.builtin.shell: |
+          echo " 
+          apiVersion: metallb.io/v1beta2
+          kind: BGPPeer
+          metadata:
+            name: {{ metallb.peerName }}
+            namespace: metallb-system
+          spec:
+            myASN: {{ metallb.peerAsn }}
+            peerASN: {{ metallb.peerAsn }}
+            peerAddress: {{ metallb.peerAddress }}
+            peerPort: 179" | kubectl apply -f -
+
+      when: inventory_hostname == groups['kubernetesMasterNodes'][0]
+

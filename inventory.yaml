@@ -1,0 +1,37 @@
+all:
+  children:
+    kubernetesMasterNodes:
+      hosts:
+        alteret.master01: {}
+    kubernetesWorkerNodes:
+      hosts:
+        alteret.worker01: {}
+        alteret.worker02: {}
+        alteret.worker03: {}
+        nuc.worker04:
+          taints:
+          - key: critical
+            effect: NoSchedule
+          - key: backup
+            effect: PreferNoSchedule
+        alteret.object-storage:
+          ansible_host: 192.168.1.86
+          taints:
+          - key: object-storage
+            effect: NoSchedule
+    router:
+      hosts:
+        edgerouter:
+          ansible_connection: network_cli
+          ansible_host: 192.168.1.1
+          ansible_network_os: edgeos
+          ansible_password: |
+            !vault
+            $ANSIBLE_VAULT;1.1;AES256
+            64393633643633336565326431326334633866613534656262383031656666306430313162303030
+            3162363364363034666362376364336333643361646465610a616465383135363464633737633664
+            30626532333233303063356337313031623831656266303630323538306430353666353834336531
+            3763653133386334350a306130363135333637663761346439613733313466636137366366353434
+            35623264343036346661643363346330326562313139623066376337626634346436663937346531
+            3663343930373836343235643462666532653738313662613330
+          ansible_user: ubnt

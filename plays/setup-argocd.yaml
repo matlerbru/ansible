@@ -1,0 +1,32 @@
+- name: Setup storage provisioners
+  hosts: kubernetesMasterNodes
+  vars_files:
+    - ../vars/vault.yaml
+    - ../vars/kubernetes.yaml
+
+  tasks:
+
+    - block:
+
+      - name: Add argo-cd helm repo
+        ansible.builtin.shell: |
+          helm repo add argo https://argoproj.github.io/argo-helm && \
+          helm repo update
+
+      - name: Check if namespace exists
+        ansible.builtin.shell:
+          kubectl get namespace | grep devops || echo ""
+        register: namespace_exists
+
+      - name: Create devops namespace
+        ansible.builtin.shell: |
+          kubectl create ns devops
+        when: namespace_exists.stdout == ""
+
+      - name: Install argo-cd helm chart
+        ansible.builtin.shell: |
+          helm upgrade --install argo-cd \
+          argo/argo-cd --version 7.6.8 \
+          --namespace devops \
+          -f ~/resources/helm-values/argo-cd.yaml
+      when: inventory_hostname == groups['kubernetesMasterNodes'][0]

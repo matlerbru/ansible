@@ -1,0 +1,27 @@
+- name: Setup kubernetes nodes
+  hosts: kubernetesWorkerNodes
+  vars_files:
+    - ../vars/vault.yaml
+    - ../vars/kubernetes.yaml
+
+  tasks:
+
+    - name: Check if node is in cluster
+      ansible.builtin.shell: |
+        kubectl get nodes | grep -iq {{ inventory_hostname }} && echo true || echo false
+      delegate_to: "{{ groups['kubernetesMasterNodes'][0] }}"
+      register: node_is_in_cluster
+
+    - name: Add k3s node
+      ansible.builtin.shell: |
+        curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="agent --server https://{{ groups['kubernetesMasterNodes'][0] }}:6443 --token {{ kubernetes.k3s_token }}" sh -s -
+      
+      become: true
+      when: node_is_in_cluster.stdout == "false"
+      
+    - name: Taint node
+      ansible.builtin.shell: |
+        kubectl taint node $(kubectl get nodes --no-headers | awk '{print $1}' | grep {{ inventory_hostname }}) {{ item.key }}:{{ item.effect }} --overwrite
+      loop: "{{ hostvars[inventory_hostname].taints }}"
+      when: hostvars[inventory_hostname].taints is defined
+      delegate_to: alteret.master01

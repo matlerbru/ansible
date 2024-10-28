@@ -1,0 +1,15 @@
+
+- name: Copy helm resources
+  hosts: kubernetesMasterNodes:kubernetesWorkerNodes
+  gather_facts: false
+
+  tasks:
+
+    - block:
+
+      - name: Copy local folder to target
+        ansible.builtin.copy:
+          src: ../resources
+          dest: ~/
+          remote_src: no
+          follow: yes

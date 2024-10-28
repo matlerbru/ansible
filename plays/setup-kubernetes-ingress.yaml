@@ -1,0 +1,31 @@
+- name: Setup kubernetes ingress
+  hosts: kubernetesMasterNodes
+  gather_facts: false
+
+  tasks:
+
+    - block:
+
+      - name: Add ingress-nginx helm repo
+        ansible.builtin.shell: |
+          helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx && \
+          helm repo update
+
+      - name: Check if namespace exists
+        ansible.builtin.shell:
+          kubectl get namespace | grep ingress-nginx || echo ""
+        register: namespace_exists
+
+      - name: Create ingress-nginx namespace
+        ansible.builtin.shell: |
+          kubectl create ns ingress-nginx
+        when: namespace_exists.stdout == ""
+
+      - name: Install ingress-nginx helm chart
+        ansible.builtin.shell: |
+          helm upgrade --install ingress-nginx \
+          ingress-nginx/ingress-nginx --version 4.11.3 \
+          --namespace ingress-nginx \
+          -f ~/resources/helm-values/ingress-nginx.yaml
+
+      when: inventory_hostname == groups['kubernetesMasterNodes'][0] 
