@@ -12,6 +12,7 @@
           - git
           - btop
           - zsh
+          - yum-utils
         state: present
       become: true
 
