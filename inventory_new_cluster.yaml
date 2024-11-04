@@ -11,7 +11,3 @@ all:
             effect: NoSchedule
           - key: backup
             effect: PreferNoSchedule
-        alteret.object-storage:
-          taints:
-          - key: object-storage
-            effect: NoSchedule
