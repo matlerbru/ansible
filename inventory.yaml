@@ -15,7 +15,6 @@ all:
           - key: backup
             effect: PreferNoSchedule
         alteret.object-storage:
-          ansible_host: 192.168.1.86
           taints:
           - key: object-storage
             effect: NoSchedule
