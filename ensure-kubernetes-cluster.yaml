@@ -23,10 +23,7 @@
 
 - name: Setup metallb
   import_playbook: ./plays/setup-metallb.yaml
-
-- name: Setup bgp on router
-  import_playbook: ./plays/setup-bgp.yaml
-
+  
 - name: Setup kubernetes ingress
   import_playbook: ./plays/setup-kubernetes-ingress.yaml
 
