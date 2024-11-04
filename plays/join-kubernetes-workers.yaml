@@ -20,12 +20,12 @@
       
     - name: Taint node
       ansible.builtin.shell: |
-        NODE_NAME=$(kubectl get nodes --no-headers | awk '{print $1}' | grep k8s.worker01) && \
-        if [ -n "$NODE_NAME" ]; then \
-          kubectl taint node ${NODE_NAME} {{ item.key }}:{{ item.effect }} --overwrite \
-        else 
-          echo "Node k8s.worker01 not found"; \
-          exit 1; \
+        NODE_NAME=$(kubectl get nodes --no-headers | awk '{print $1}' | grep k8s.worker01) &&
+        if [ -n "$NODE_NAME" ]; then
+          kubectl taint node ${NODE_NAME} {{ item.key }}:{{ item.effect }} --overwrite
+        else
+          echo "Node k8s.worker01 not found";
+          exit 1;
       loop: "{{ hostvars[inventory_hostname].taints }}"
       when: hostvars[inventory_hostname].taints is defined
       delegate_to: "{{ groups['kubernetesMasterNodes'][0] }}"
