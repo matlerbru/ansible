@@ -35,6 +35,12 @@
       when: hostvars[inventory_hostname].taints is defined
       delegate_to: "{{ groups['kubernetesMasterNodes'][0] }}"
 
+    - name: Ensure /etc/rancher/k3s directory exists
+      file:
+        path: /etc/rancher/k3s
+        state: directory
+        mode: '0755'
+
     - name: Template registries.j2 to /etc/rancher/k3s/registries.yaml
       template:
         src: ../resources/docker/registries.j2
