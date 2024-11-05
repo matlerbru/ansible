@@ -6,26 +6,33 @@
 
   tasks:
 
-    - name: Check if node is in cluster
-      ansible.builtin.shell: |
-        kubectl get nodes | grep -iq {{ inventory_hostname }} && echo true || echo false
-      delegate_to: "{{ groups['kubernetesMasterNodes'][0] }}"
-      register: node_is_in_cluster
+    block:
 
-    - name: Add k3s node
-      ansible.builtin.shell: |
-        curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="agent --server https://{{ groups['kubernetesMasterNodes'][0] }}:6443 --token {{ kubernetes.k3s_token }}" sh -s -
-      become: true
-      when: node_is_in_cluster.stdout == "false"
-      
-    - name: Taint node
-      ansible.builtin.shell: |
-        NODE_NAME=$(kubectl get nodes --no-headers | awk '{print $1}' | grep {{ inventory_hostname }})
-        if [ -n "$NODE_NAME" ]; then
-          kubectl taint node ${NODE_NAME} {{ item.key }}:{{ item.effect }} --overwrite
-        else
-          echo "Node {{ inventory_hostname }} not found";
-          exit 1;
-      loop: "{{ hostvars[inventory_hostname].taints }}"
-      when: hostvars[inventory_hostname].taints is defined
-      delegate_to: "{{ groups['kubernetesMasterNodes'][0] }}"
+      - name: Check if node is in cluster
+        ansible.builtin.shell: |
+          kubectl get nodes | grep -iq {{ inventory_hostname }}
+        delegate_to: "{{ groups['kubernetesMasterNodes'][0] }}"
+        register: node_is_in_cluster
+
+      - name: Add k3s node
+        ansible.builtin.shell: |
+          curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="agent --server https://{{ groups['kubernetesMasterNodes'][0] }}:6443 --token {{ kubernetes.k3s_token }}" sh -s -
+        become: true
+        when: node_is_in_cluster.rc != 0
+
+      - name: Get full node name
+        ansible.builtin.shell: |
+          kubectl get nodes --no-headers | awk '{print $1}' | grep {{ inventory_hostname }}
+        delegate_to: "{{ groups['kubernetesMasterNodes'][0] }}"
+        register: node_full_name
+  
+      - name: Print the node full name
+        debug:
+          msg: "The full node name is: {{ node_full_name.stdout }}"
+
+      - name: Taint node
+        ansible.builtin.shell: |
+            kubectl taint node {{ node_full_name.stdout }} {{ item.key }}:{{ item.effect }} --overwrite
+        loop: "{{ hostvars[inventory_hostname].taints }}"
+        when: hostvars[inventory_hostname].taints is defined
+        delegate_to: "{{ groups['kubernetesMasterNodes'][0] }}"
