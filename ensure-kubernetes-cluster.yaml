@@ -21,8 +21,8 @@
 - name: Join worker nodes to the cluster
   import_playbook: ./plays/join-kubernetes-workers.yaml
 
-- name: Setup metallb
-  import_playbook: ./plays/setup-metallb.yaml
+#- name: Setup metallb
+#  import_playbook: ./plays/setup-metallb.yaml
   
 - name: Setup kubernetes ingress
   import_playbook: ./plays/setup-kubernetes-ingress.yaml

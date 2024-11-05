@@ -8,16 +8,7 @@ all:
         alteret.worker01: {}
         alteret.worker02: {}
         alteret.worker03: {}
-        nuc.worker04:
-          taints:
-          - key: critical
-            effect: NoSchedule
-          - key: backup
-            effect: PreferNoSchedule
-        alteret.object-storage:
-          taints:
-          - key: object-storage
-            effect: NoSchedule
+
     router:
       hosts:
         edgerouter:
