@@ -24,11 +24,11 @@
 #- name: Setup metallb
 #  import_playbook: ./plays/setup-metallb.yaml
   
-- name: Setup kubernetes ingress
-  import_playbook: ./plays/setup-kubernetes-ingress.yaml
+#- name: Setup kubernetes ingress
+#  import_playbook: ./plays/setup-kubernetes-ingress.yaml
 
-- name: Disable traefik
-  import_playbook: ./plays/disable-traefik.yaml
+#- name: Disable traefik
+#  import_playbook: ./plays/disable-traefik.yaml
 
 - name: Setup storage provisioners
   import_playbook: ./plays/setup-storage-provisioners.yaml
