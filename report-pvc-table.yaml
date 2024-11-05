@@ -13,5 +13,5 @@
 
     - name: Print PVC table
       debug:
-        msg: {{ kubectl_pvc_list.stdout }}
+        msg: "{{ kubectl_pvc_list.stdout }}"
       when: inventory_hostname == groups['kubernetesMasterNodes'][0] 
