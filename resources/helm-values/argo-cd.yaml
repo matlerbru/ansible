@@ -13,7 +13,6 @@ server:
 configs:
   params:
     server.insecure: true
-    application.namespaces: "torrent.*"
 
   secret: 
     argocdServerAdminPassword: $2a$10$n542ByQ8cUsv.X1jmTQmP.SRiiwsTIBKsSvMuE9pFqVbK63/88TZm

@@ -34,3 +34,12 @@
       loop: "{{ hostvars[inventory_hostname].taints }}"
       when: hostvars[inventory_hostname].taints is defined
       delegate_to: "{{ groups['kubernetesMasterNodes'][0] }}"
+
+    - name: Template registries.j2 to /etc/rancher/k3s/registries.yaml
+      template:
+        src: ../resources/docker/registries.j2
+        dest: /etc/rancher/k3s/registries.yaml
+        mode: '0644'
+        owner: root
+        group: root
+      become: true
