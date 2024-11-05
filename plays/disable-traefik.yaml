@@ -26,9 +26,3 @@
           when: traefik_is_installed.stdout != ""
           delegate_to: "{{ groups['kubernetesMasterNodes'][0] }}"
           run_once: true
-
-        - name: Restart k3s
-          ansible.builtin.shell: |
-            systemctl restart k3s
-          become: true
-
