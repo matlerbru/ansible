@@ -30,4 +30,19 @@
             group: "{{ current_user.stdout }}" 
           become: true
 
+        - name: Get full node name
+          ansible.builtin.shell: |
+            kubectl get nodes --no-headers | awk '{print $1}' | grep {{ inventory_hostname }}
+          register: node_full_name
+
+        - name: Print the node full name
+          debug:
+            msg: "The full node name is: {{ node_full_name.stdout }}"
+
+        - name: Taint node
+          ansible.builtin.shell: |
+              kubectl taint node {{ node_full_name.stdout }} node-role.kubernetes.io/master=true:NoSchedule --overwrite
+          loop: "{{ hostvars[inventory_hostname].taints }}"
+          when: hostvars[inventory_hostname].taints is defined
+
       when: inventory_hostname == groups['kubernetesMasterNodes'][0]
