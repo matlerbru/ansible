@@ -1,0 +1,18 @@
+
+- name: Ensure the .ssh directory exists
+  ansible.builtin.file:
+    path: ~/.ssh
+    state: directory
+    mode: "0700"
+
+- name: Add ansible public key
+  ansible.builtin.copy:
+    src: ../../files/ssh/ansible/id-ansible.pub
+    dest: ~/.ssh/id-ansible.pub
+    mode: "0644"
+
+- name: Add ansible private key
+  ansible.builtin.copy:
+    src: ../../files/ssh/ansible/id-ansible
+    dest: ~/.ssh/id-ansible
+    mode: "0600"

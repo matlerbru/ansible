@@ -1,0 +1,21 @@
+
+- name: Get the status of olm-operator
+  ansible.builtin.shell: kubectl -n olm get deployments -o custom-columns=NAME:.metadata.name,READY:.status.readyReplicas | grep olm-operator
+  register: olm_operator_status
+  ignore_errors: true
+
+- name: Setup operator-lifecycle-manager
+  ansible.builtin.shell: |
+    curl -L https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v0.30.0/install.sh -o install.sh
+    chmod +x install.sh
+    ./install.sh v0.30.0
+  when: olm_operator_status.rc != 0
+
+- name: Ensure operator namespace
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: operators

@@ -6,6 +6,9 @@
   - name: Install generic packages
     include_tasks: ../roles/generic/install-packages.yaml
 
+  - name: Add ansiuble ssh keys
+    include_tasks: ../roles/generic/add-ssh-ansible-key.yaml
+
   - name: Set hostname
     include_tasks: ../roles/generic/set-hostname.yaml
 
@@ -87,6 +90,9 @@
 
   - name: Setup sealed secrets
     include_tasks: ../roles/kubernetes/setup-sealed-secrets.yaml
+
+  - name: Setup operator-lifecycle-manager
+    include_tasks: ../roles/kubernetes/setup-operator-lifecycle-manager.yaml
 
   - name: Setup argo-cd
     include_tasks: ../roles/kubernetes/setup-argocd.yaml
