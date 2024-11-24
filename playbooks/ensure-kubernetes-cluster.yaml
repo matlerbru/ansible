@@ -1,0 +1,106 @@
+- name: Create kubeadm kubernetes cluster
+  hosts: kubernetesMasterNodes
+
+  tasks:
+
+  - name: Install generic packages
+    include_tasks: ../roles/generic/install-packages.yaml
+
+  - name: Set hostname
+    include_tasks: ../roles/generic/set-hostname.yaml
+
+  - name: Disable firewall
+    include_tasks: ../roles/kubernetes/disable-firewall.yaml
+
+  - name: Install generic packages
+    include_tasks: ../roles/kubernetes/install-generic-packages.yaml
+
+  - name: Install kubernetes packages
+    include_tasks: ../roles/kubernetes/install-kubernetes-packages.yaml
+
+  - name: Disable swap
+    include_tasks: ../roles/kubernetes/disable-swap.yaml
+
+  - name: Set linux settings
+    include_tasks: ../roles/kubernetes/configure-linux-node.yaml
+
+  - name: Setup containerd
+    include_tasks: ../roles/kubernetes/setup-containerd.yaml
+
+  - name: Install cluster
+    include_tasks: ../roles/kubernetes/initialize-kubeadm-cluster.yaml
+
+  - name: Install cilium
+    include_tasks: ../roles/kubernetes/install-cilium.yaml
+
+  run_once: true
+
+- name: Join kubernetes workers
+  hosts: kubernetesWorkerNodes
+
+  tasks:
+
+  - name: Install generic packages
+    include_tasks: ../roles/generic/install-packages.yaml
+
+  - name: Set hostname
+    include_tasks: ../roles/generic/set-hostname.yaml
+
+  - name: Disable firewall
+    include_tasks: ../roles/kubernetes/disable-firewall.yaml
+
+  - name: Install generic packages
+    include_tasks: ../roles/kubernetes/install-generic-packages.yaml
+
+  - name: Install kubernetes packages
+    include_tasks: ../roles/kubernetes/install-kubernetes-packages.yaml
+
+  - name: Disable swap
+    include_tasks: ../roles/kubernetes/disable-swap.yaml
+
+  - name: Set linux settings
+    include_tasks: ../roles/kubernetes/configure-linux-node.yaml
+
+  - name: Setup containerd
+    include_tasks: ../roles/kubernetes/setup-containerd.yaml
+
+  - name: Join node to kubernetes cluster
+    include_tasks: ../roles/kubernetes/join-node.yaml
+
+  - name: taint node
+    include_tasks: ../roles/kubernetes/taint-node.yaml
+
+
+- name: Create kubeadm kubernetes cluster
+  hosts: kubernetesMasterNodes
+
+  tasks:
+
+  - name: Setup metallb
+    include_tasks: ../roles/kubernetes/setup-metallb.yaml
+    
+  - name: Setup kubernetes ingress
+    include_tasks: ../roles/kubernetes/setup-ingress-nginx.yaml
+
+  - name: Setup storage provisioners
+    include_tasks: ../roles/kubernetes/setup-storage-provisioners.yaml
+
+  - name: Setup sealed secrets
+    include_tasks: ../roles/kubernetes/setup-sealed-secrets.yaml
+
+  - name: Setup argo-cd
+    include_tasks: ../roles/kubernetes/setup-argocd.yaml
+
+  - name: Install prometheus crds
+    include_tasks: ../roles/kubernetes/install-prometheus-crds.yaml
+
+  - name: Install krew
+    include_tasks: ../roles/kubernetes/install-krew.yaml
+
+  - name: Install kubens
+    include_tasks: ../roles/kubernetes/install-kubens.yaml
+
+  - name: Setup metrics server
+    include_tasks: ../roles/kubernetes/setup-metrics-server.yaml
+
+  run_once: true

@@ -1,0 +1,58 @@
+
+- name: Include Kubernetes variables
+  include_vars:
+    file: ../../vars/kubernetes.yaml
+
+- name: Check if the node is part of a Kubernetes cluster
+  ansible.builtin.command: kubectl get nodes --no-headers
+  register: cluster_check
+  ignore_errors: true
+
+- name: Initialize cluster
+  ansible.builtin.shell: |
+    kubeadm init \
+    --pod-network-cidr={{ podNetworkCidr }} \
+    --apiserver-advertise-address={{ ansible_default_ipv4.address }}
+  register: init_output
+  become: true
+  when: cluster_check.rc != 0
+
+- name: Check if admin.conf exists
+  ansible.builtin.stat:
+    path: /etc/kubernetes/admin.conf
+  register: admin_conf_stat
+
+- name: Ensure the ~/.kube directory exists
+  ansible.builtin.file:
+    path: "{{ ansible_facts['env']['HOME'] }}/.kube"
+    state: directory
+    mode: '0755'
+  become: true
+
+- name: Copy kubeconfig to user's .kube directory
+  ansible.builtin.copy:
+    src: /etc/kubernetes/admin.conf
+    dest: "{{ ansible_facts['env']['HOME'] }}/.kube/config"
+    owner: "1000"
+    group: "1000"
+    mode: '0644'
+    remote_src: true
+  when: admin_conf_stat.stat.exists
+  become: true
+
+- name: Wait for kubectl to be available
+  command: kubectl version
+  register: kubectl_check
+  retries: 5
+  delay: 10
+  until: kubectl_check.rc == 0
+  ignore_errors: no
+
+- name: Wait for Kubernetes API server to be available
+  wait_for:
+    host: "{{ ansible_default_ipv4.address }}"
+    port: 6443
+    state: started
+    delay: 10
+    timeout: 300
+

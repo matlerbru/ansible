@@ -1,0 +1,7 @@
+
+    - name: Taint node
+      ansible.builtin.shell: |
+          kubectl taint node {{ hostvars[inventory_hostname]['hostname'] }} {{ item.key }}:{{ item.effect }} --overwrite
+      loop: "{{ hostvars[inventory_hostname].taints }}"
+      when: hostvars[inventory_hostname].taints is defined
+      delegate_to: "{{ groups['kubernetesMasterNodes'][0] }}"

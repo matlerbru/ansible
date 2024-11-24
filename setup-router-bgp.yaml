@@ -1,3 +1,0 @@
-
-- name: Setup bgp on router
-  import_playbook: ./plays/setup-bgp.yaml

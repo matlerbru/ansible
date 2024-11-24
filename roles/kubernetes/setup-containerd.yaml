@@ -1,0 +1,36 @@
+
+- name: Install packages
+  yum:
+    name:
+      - containerd
+  become: true
+
+- name: Enable containerd
+  ansible.builtin.systemd:
+    name: containerd
+    state: started
+    enabled: true
+  become: true
+  retries: 3
+  delay: 5
+
+- name: Ensure containerd configuration directory
+  ansible.builtin.file:
+    path: /etc/containerd
+    state: directory
+    mode: "0755"
+
+- name: Ensure containerd configuration using template
+  ansible.builtin.template:
+    src: ../../files/kubernetes/containerd-config.toml.j2
+    dest: /etc/containerd/config.toml
+    mode: "0644"
+    owner: root
+    group: root
+  become: true
+
+- name: Restart containerd service
+  ansible.builtin.systemd:
+    name: containerd
+    state: restarted
+  become: true

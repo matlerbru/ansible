@@ -1,0 +1,44 @@
+
+- name: Include Kubernetes variables
+  include_vars:
+    file: ../../vars/kubernetes.yaml
+
+- name: Include Vault variables
+  include_vars:
+    file: ../../vars/vault.yaml
+
+- name: Add argo-cd Helm repository
+  kubernetes.core.helm_repository:
+    name: argo
+    repo_url: https://argoproj.github.io/argo-helm
+
+- name: Ensure argo-cd namespace
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: argo-cd
+
+- name: Install or upgrade argo-cd Helm chart
+  kubernetes.core.helm:
+    name: argo-cd
+    chart_ref: argo/argo-cd
+    chart_version: "7.6.8"
+    namespace: argo-cd
+    values: 
+      fullnameOverride: argocd
+      global:
+        domain: argocd.priv
+      crds:
+        keep: false
+      server:
+        ingress:
+          enabled: true
+      configs:
+        params:
+          server.insecure: true
+        secret: 
+          argocdServerAdminPassword: $2a$10$n542ByQ8cUsv.X1jmTQmP.SRiiwsTIBKsSvMuE9pFqVbK63/88TZm
+    release_state: present

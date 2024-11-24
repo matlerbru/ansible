@@ -1,0 +1,6 @@
+
+- name: Install kubens
+  ansible.builtin.shell: |
+    source ~/.zshrc && \
+    kubectl krew install ns
+  run_once: true

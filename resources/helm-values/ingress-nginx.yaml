@@ -1,5 +1,0 @@
-controller:
-  kind: DaemonSet
-  hostNetwork: true
-  ingressClassResource:
-    default: true

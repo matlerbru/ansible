@@ -6,3 +6,5 @@ metallb:
   peerAddress: 192.168.1.1
 
 defaultUser: mlb
+
+podNetworkCidr: 10.244.0.0/16

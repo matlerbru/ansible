@@ -1,0 +1,11 @@
+- name: Remove packages
+  yum:
+    name:
+      - zram-generator-defaults
+    state: removed
+  become: true
+
+- name: Disable swap temporarily
+  ansible.builtin.shell: |
+    swapoff -a
+  become: true

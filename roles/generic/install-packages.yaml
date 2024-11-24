@@ -1,0 +1,26 @@
+
+- name: Include Kubernetes variables
+  include_vars:
+    file: ../../vars/kubernetes.yaml
+
+- name: Install generic packages
+  yum:
+    name:
+      - curl
+      - git
+      - btop
+      - zsh
+      - yum-utils
+    state: present
+  become: true
+
+- name: Copy .zshrc to host
+  ansible.builtin.template:
+    src: ../../files/zshrc.j2
+    dest: ~/.zshrc
+
+- name: Set default shell to zsh
+  user:
+    name: "{{ defaultUser }}"
+    shell: /bin/zsh
+  become: true

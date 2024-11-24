@@ -1,0 +1,14 @@
+- name: Set the hostname
+  ansible.builtin.hostname:
+    name: "{{ hostvars[inventory_hostname]['hostname'] }}"
+  when: hostvars[inventory_hostname].hostname is defined
+  become: true
+
+- name: Update /etc/hosts for localhost
+  lineinfile:
+    path: /etc/hosts
+    regexp: '^127\.0\.1\.1'
+    line: "127.0.1.1 {{ hostvars[inventory_hostname]['hostname'] }}"
+    state: present
+  when: hostvars[inventory_hostname].hostname is defined
+  become: true
