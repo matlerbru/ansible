@@ -36,6 +36,9 @@
   - name: Install cilium
     include_tasks: ../roles/kubernetes/install-cilium.yaml
 
+  - name: Create namespaces
+    include_tasks: ../roles/kubernetes/create-namespaces.yaml
+
   run_once: true
 
 - name: Join kubernetes workers
@@ -108,5 +111,8 @@
 
   - name: Setup metrics server
     include_tasks: ../roles/kubernetes/setup-metrics-server.yaml
+
+  - name: Create pull secret
+    include_tasks: ../roles/kubernetes/create-private-registry-credentials-secret.yaml
 
   run_once: true

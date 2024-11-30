@@ -1,0 +1,16 @@
+
+- name: Include Kubernetes variables
+  include_vars:
+    file: ../../vars/kubernetes.yaml
+
+- name: Ensure namespaces exist
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      api_version: v1
+      kind: Namespace
+      metadata:
+        name: "{{ item }}"
+        labels:
+          argocd.argoproj.io/managed-by: argocd
+  loop: "{{ namespaces }}"
