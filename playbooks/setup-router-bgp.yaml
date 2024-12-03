@@ -1,3 +1,8 @@
 
-- name: Setup bgp on router
-  import_playbook: ./roles/network/setup-bgp-on-edgerouter.yaml
+- name: Setup rputer bgp
+  hosts: kubernetesMasterNodes,kubernetesWorkerNodes
+
+  tasks:
+
+  - name: Setup bgp on router
+    include_tasks: ../roles/network/setup-bgp-on-edgerouter.yaml

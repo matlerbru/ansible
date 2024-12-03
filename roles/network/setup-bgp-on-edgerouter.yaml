@@ -1,20 +1,19 @@
-- name: Setup bgp on router
-  hosts: kubernetesMasterNodes:kubernetesWorkerNodes
-  vars_files:
-  - ../vars/kubernetes.yaml
 
-  tasks:
 
-    - name: Setup node BGP on router
-      community.network.edgeos_config:
-        lines:
-          - set protocols bgp {{ metallb.peerAsn }} parameters router-id {{ metallb.peerAddress }}
-          - set protocols bgp {{ metallb.peerAsn }} maximum-paths ibgp 32
-      delegate_to: edgerouter
-      run_once: true
+- name: Include Kubernetes variables
+  include_vars:
+    file: ../../vars/kubernetes.yaml
 
-    - name: Setup node BGP on router
-      community.network.edgeos_config:
-        lines:
-          - set protocols bgp {{ metallb.peerAsn }} neighbor {{ ansible_default_ipv4.address }} remote-as {{ metallb.peerAsn }}
-      delegate_to: edgerouter
+- name: Setup node BGP on router
+  community.network.edgeos_config:
+    lines:
+      - set protocols bgp {{ metallb.peerAsn }} parameters router-id {{ metallb.peerAddress }}
+      - set protocols bgp {{ metallb.peerAsn }} maximum-paths ibgp 32
+  delegate_to: edgerouter
+  run_once: true
+
+- name: Setup node BGP on router
+  community.network.edgeos_config:
+    lines:
+      - set protocols bgp {{ metallb.peerAsn }} neighbor {{ ansible_default_ipv4.address }} remote-as {{ metallb.peerAsn }}
+  delegate_to: edgerouter

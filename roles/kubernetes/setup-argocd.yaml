@@ -49,7 +49,7 @@
         publicKey: "{{ lookup('file', '../../files/ssh/ansible/id-ansible.pub') | b64encode }}"
         username: "{{ github.username | b64encode }}"
         accessToken: "{{ github.accessToken | b64encode }}"
-  #no_log: true
+  no_log: true
 
 - name: Add argocd cr
   kubernetes.core.k8s:
@@ -64,6 +64,7 @@
         server:
           ingress:
             enabled: true
+            ingressClassName: nginx
           host: "{{ argocd.hostname }}"
           insecure: true
         initialRepositories: |
