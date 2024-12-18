@@ -5,7 +5,7 @@
       - helm
       - iptables
       - iproute-tc
-      - python3.12
+      - python3.13
       - python3-pip
     state: present
   become: true

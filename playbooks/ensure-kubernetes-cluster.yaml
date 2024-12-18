@@ -16,7 +16,7 @@
     include_tasks: ../roles/kubernetes/disable-firewall.yaml
 
   - name: Install generic packages
-    include_tasks: ../roles/kubernetes/install-generic-packages.yaml
+    include_tasks: ../roles/kubernetes/install-packages.yaml
 
   - name: Install kubernetes packages
     include_tasks: ../roles/kubernetes/install-kubernetes-packages.yaml
@@ -56,7 +56,7 @@
     include_tasks: ../roles/kubernetes/disable-firewall.yaml
 
   - name: Install generic packages
-    include_tasks: ../roles/kubernetes/install-generic-packages.yaml
+    include_tasks: ../roles/kubernetes/install-packages.yaml
 
   - name: Install kubernetes packages
     include_tasks: ../roles/kubernetes/install-kubernetes-packages.yaml

@@ -1,14 +1,11 @@
 
 - name: Check if node has joined the cluster
-  ansible.builtin.command: >
-    kubectl get nodes --no-headers -o custom-columns=NAME:.metadata.name
-  register: node_check
+  ansible.builtin.shell: |
+    kubectl get nodes --no-headers -o custom-columns=NAME:.metadata.name \
+    | grep {{ hostvars[inventory_hostname].hostname }}
+  register: node_in_cluster
   delegate_to: "{{ groups['kubernetesMasterNodes'][0] }}"
   ignore_errors: true
-
-- name: Check if current node is in the cluster
-  ansible.builtin.set_fact:
-    node_in_cluster: "{{ inventory_hostname in node_check.stdout_lines | default([]) }}"
 
 - name: Generate kubeadm join command
   ansible.builtin.shell: kubeadm token create --print-join-command
@@ -19,7 +16,7 @@
 - name: join kubernetes node
   ansible.builtin.shell: "{{ join_command.stdout }}"
   become: true
-  when: not node_in_cluster
+  when: node_in_cluster.rc != 0
 
 - name: Check if the node has the "not-ready" taint
   ansible.builtin.shell: |
