@@ -8,7 +8,10 @@
     file: ../../vars/vault.yaml
 
 - name: Get the status of argocd-operator
-  ansible.builtin.shell: kubectl -n operators get deployments -o custom-columns=NAME:.metadata.name,READY:.status.readyReplicas | grep argocd-operator-controller-manager
+  ansible.builtin.shell: |
+    kubectl -n operators get deployments \
+    -o custom-columns=NAME:.metadata.name,READY:.status.readyReplicas | \
+    grep argocd-operator-controller-manager
   register: argocd_operator_status
   ignore_errors: true
 

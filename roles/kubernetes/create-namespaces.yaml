@@ -11,6 +11,6 @@
       kind: Namespace
       metadata:
         name: "{{ item }}"
-        labels:
-          argocd.argoproj.io/managed-by: argocd
+        #labels:
+        #  argocd.argoproj.io/managed-by: argocd
   loop: "{{ namespaces }}"
