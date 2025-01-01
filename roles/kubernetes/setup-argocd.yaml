@@ -85,8 +85,7 @@
             passwordSecret:
               name: github
               key: accessToken
-        clusterConfig:
-          namespaces:
+        sourceNamespaces:
           - "*"
 
 - name: Wait for the argocd-secret to exist
