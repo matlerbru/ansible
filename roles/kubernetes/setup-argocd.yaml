@@ -85,9 +85,9 @@
             passwordSecret:
               name: github
               key: accessToken
-          clusterConfig:
-            namespaces:
-            - "*"
+        clusterConfig:
+          namespaces:
+          - "*"
 
 - name: Wait for the argocd-secret to exist
   ansible.builtin.command:
