@@ -4,6 +4,19 @@
   register: olm_operator_status
   ignore_errors: true
 
+- name: Delete old crds
+  ansible.builtin.shell: |
+    kubectl delete crds \
+    subscriptions.operators.coreos.com
+    olmconfigs.operators.coreos.com \
+    operatorconditions.operators.coreos.com \
+    operatorgroups.operators.coreos.com \
+    operators.operators.coreos.com \
+    installplans.operators.coreos.com \
+    clusterserviceversions.operators.coreos.com \
+    catalogsources.operators.coreos.com \
+  when: olm_operator_status.rc != 0
+
 - name: Setup operator-lifecycle-manager
   ansible.builtin.shell: |
     curl -L https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v0.30.0/install.sh -o install.sh
