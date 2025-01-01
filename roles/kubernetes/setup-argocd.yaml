@@ -85,8 +85,8 @@
             passwordSecret:
               name: github
               key: accessToken
-        # sourceNamespaces:
-        #   - "*"
+        sourceNamespaces:
+        - "*"
 
 - name: Wait for the argocd-secret to exist
   ansible.builtin.command:
