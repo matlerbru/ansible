@@ -134,6 +134,11 @@
       metadata:
         name: argocd
 
+- name: Hash password
+  shell: |
+    htpasswd -bnBC 10 "" {{ argocd.password }} | tr -d ':\n' | sed 's/$2y/$2a/'
+  register: password_hash
+
 - name: Install or upgrade argocd Helm chart
   kubernetes.core.helm:
     name: argocd
@@ -154,4 +159,14 @@
         enabled: false
       dex:
         enabled: false
+      configs:
+        secret:
+          argocdServerAdminPassword: "{{ password_hash.stdout }}"
+        repositories:
+          helm-repo:
+          url: https://my-private-chart-repo.internal
+          name: ghcr.io/matlerbru/charts
+          type: helm
+          password: {{ github.password }}
+          username: {{ github.username }}
     release_state: present
