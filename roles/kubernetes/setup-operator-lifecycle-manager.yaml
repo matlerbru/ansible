@@ -7,7 +7,7 @@
 - name: Delete old crds
   ansible.builtin.shell: |
     kubectl delete crds \
-    subscriptions.operators.coreos.com
+    subscriptions.operators.coreos.com \
     olmconfigs.operators.coreos.com \
     operatorconditions.operators.coreos.com \
     operatorgroups.operators.coreos.com \
@@ -15,6 +15,7 @@
     installplans.operators.coreos.com \
     clusterserviceversions.operators.coreos.com \
     catalogsources.operators.coreos.com \
+    clusterserviceversions.operators.coreos.com
   when: olm_operator_status.rc != 0
 
 - name: Setup operator-lifecycle-manager

@@ -15,6 +15,17 @@
   register: argocd_operator_status
   ignore_errors: true
 
+- name: Delete old crds
+  ansible.builtin.shell: |
+    kubectl delete crds \
+    applications.argoproj.io \
+    applicationsets.argoproj.io \
+    appprojects.argoproj.io \
+    argocdexports.argoproj.io \
+    argocds.argoproj.io \
+    notificationsconfigurations.argoproj.io
+  when: argocd_operator_status.rc != 0
+
 - name: Install argocd-operator
   ansible.builtin.shell: |
     kubectl create -f https://operatorhub.io/install/argocd-operator.yaml
