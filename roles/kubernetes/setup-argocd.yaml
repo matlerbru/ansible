@@ -164,9 +164,9 @@
           argocdServerAdminPassword: "{{ password_hash.stdout }}"
         repositories:
           helm-repo:
-          url: https://my-private-chart-repo.internal
-          name: ghcr.io/matlerbru/charts
-          type: helm
-          password: "{{ github.password }}"
-          username: "{{ github.username }}"
+            url: https://my-private-chart-repo.internal
+            name: ghcr.io/matlerbru/charts
+            type: helm
+            password: "{{ github.password }}"
+            username: "{{ github.username }}"
     release_state: present
