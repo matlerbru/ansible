@@ -17,6 +17,7 @@
     catalogsources.operators.coreos.com \
     clusterserviceversions.operators.coreos.com
   when: olm_operator_status.rc != 0
+  ignore_errors: true
 
 - name: Setup operator-lifecycle-manager
   ansible.builtin.shell: |

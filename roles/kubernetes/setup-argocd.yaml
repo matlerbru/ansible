@@ -25,6 +25,7 @@
     argocds.argoproj.io \
     notificationsconfigurations.argoproj.io
   when: argocd_operator_status.rc != 0
+  ignore_errors: true
 
 - name: Install argocd-operator
   ansible.builtin.shell: |
