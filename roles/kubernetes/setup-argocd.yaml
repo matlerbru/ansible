@@ -122,7 +122,7 @@
 
 - name: Add argocd Helm repository
   kubernetes.core.helm_repository:
-    name: argocd
+    name: argo
     repo_url: https://argoproj.github.io/argo-helm
 
 - name: Ensure argocd namespace
@@ -137,7 +137,7 @@
 - name: Install or upgrade argocd Helm chart
   kubernetes.core.helm:
     name: argocd
-    chart_ref: argo-cd
+    chart_ref: argo/argo-cd
     chart_version: "7.7.12"
     namespace: argocd
     values:
