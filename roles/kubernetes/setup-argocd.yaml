@@ -167,6 +167,6 @@
           url: https://my-private-chart-repo.internal
           name: ghcr.io/matlerbru/charts
           type: helm
-          password: {{ github.password }}
-          username: {{ github.username }}
+          password: "{{ github.password }}"
+          username: "{{ github.username }}"
     release_state: present
