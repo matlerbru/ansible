@@ -152,4 +152,6 @@
           ingressClassName: nginx
       redis: 
         enabled: false
+      dex:
+        enabled: false
     release_state: present
