@@ -40,15 +40,15 @@
 #   delay: 5
 #   until: pod_status.rc == 0
 # 
- - name: Ensure argo-cd namespace
-   kubernetes.core.k8s:
-     state: present
-     definition:
-      apiVersion: v1
-      kind: Namespace
-      metadata:
-        name: argocd
-
+# - name: Ensure argo-cd namespace
+#   kubernetes.core.k8s:
+#     state: present
+#     definition:
+#      apiVersion: v1
+#      kind: Namespace
+#      metadata:
+#        name: argocd
+#
 # - name: Set ssh secret
 #   kubernetes.core.k8s:
 #     state: present
