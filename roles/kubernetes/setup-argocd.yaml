@@ -7,40 +7,125 @@
   include_vars:
     file: ../../vars/vault.yaml
 
-- name: Get the status of argocd-operator
-  ansible.builtin.shell: |
-    kubectl -n operators get deployments \
-    -o custom-columns=NAME:.metadata.name,READY:.status.readyReplicas | \
-    grep argocd-operator-controller-manager
-  register: argocd_operator_status
-  ignore_errors: true
+# - name: Get the status of argocd-operator
+#   ansible.builtin.shell: |
+#     kubectl -n operators get deployments \
+#     -o custom-columns=NAME:.metadata.name,READY:.status.readyReplicas | \
+#     grep argocd-operator-controller-manager
+#   register: argocd_operator_status
+#   ignore_errors: true
+# 
+# - name: Delete old crds
+#   ansible.builtin.shell: |
+#     kubectl delete crds \
+#     applications.argoproj.io \
+#     applicationsets.argoproj.io \
+#     appprojects.argoproj.io \
+#     argocdexports.argoproj.io \
+#     argocds.argoproj.io \
+#     notificationsconfigurations.argoproj.io
+#   when: argocd_operator_status.rc != 0
+#   ignore_errors: true
+# 
+# - name: Install argocd-operator
+#   ansible.builtin.shell: |
+#     kubectl create -f https://operatorhub.io/install/argocd-operator.yaml
+#   when: argocd_operator_status.rc != 0
+# 
+# - name: Wait for argocd-operator-controller-manager pod to be Running
+#   ansible.builtin.shell: |
+#     kubectl get deploy -n operators argocd-operator-controller-manager | grep 1/1
+#   register: pod_status
+#   retries: 60
+#   delay: 5
+#   until: pod_status.rc == 0
+# 
+ - name: Ensure argo-cd namespace
+   kubernetes.core.k8s:
+     state: present
+     definition:
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: argocd
 
-- name: Delete old crds
-  ansible.builtin.shell: |
-    kubectl delete crds \
-    applications.argoproj.io \
-    applicationsets.argoproj.io \
-    appprojects.argoproj.io \
-    argocdexports.argoproj.io \
-    argocds.argoproj.io \
-    notificationsconfigurations.argoproj.io
-  when: argocd_operator_status.rc != 0
-  ignore_errors: true
+# - name: Set ssh secret
+#   kubernetes.core.k8s:
+#     state: present
+#     definition:
+#       apiVersion: v1
+#       kind: Secret
+#       metadata:
+#         name: github
+#         namespace: argocd
+#       type: Opaque
+#       data:
+#         privateKey: "{{ lookup('file', '../../files/ssh/ansible/id-ansible') | b64encode }}"
+#         publicKey: "{{ lookup('file', '../../files/ssh/ansible/id-ansible.pub') | b64encode }}"
+#         username: "{{ github.username | b64encode }}"
+#         accessToken: "{{ github.accessToken | b64encode }}"
+#   no_log: true
 
-- name: Install argocd-operator
-  ansible.builtin.shell: |
-    kubectl create -f https://operatorhub.io/install/argocd-operator.yaml
-  when: argocd_operator_status.rc != 0
+# - name: Add argocd cr
+#   kubernetes.core.k8s:
+#     state: present
+#     definition:
+#       apiVersion: argoproj.io/v1alpha1
+#       kind: ArgoCD
+#       metadata:
+#         name: argocd
+#         namespace: argocd
+#       spec:
+#         server:
+#           ingress:
+#             enabled: true
+#             ingressClassName: nginx
+#           host: "{{ argocd.hostname }}"
+#           insecure: true
+#         initialRepositories: |
+#           - url: git@github.com:matlerbru/kubernetes.git
+#             type: git
+#             sshPrivateKeySecret:
+#               name: github
+#               key: privateKey
+#           - url: ghcr.io/matlerbru/charts
+#             type: helm
+#             name: charts
+#             usernameSecret:
+#               name: github
+#               key: username
+#             passwordSecret:
+#               name: github
+#               key: accessToken
+#         sourceNamespaces:
+#         - "*"
+# 
+# - name: Wait for the argocd-secret to exist
+#   ansible.builtin.command:
+#     cmd: kubectl -n argocd get secret argocd-secret
+#   register: argocd_secret_check
+#   retries: 10
+#   delay: 5
+#   until: argocd_secret_check.rc == 0
+#   ignore_errors: false
+# 
+# - name: Set argocd password
+#   ansible.builtin.shell: |
+#     ENCRYPTED_PASSWORD=$(htpasswd -bnBC 10 "" {{ argocd.password }} | tr -d ':\n' | sed 's/$2y/$2a/')
+#     kubectl -n argocd patch secret argocd-secret \
+#     -p '{"stringData": {
+#       "admin.password": "$2a$10$vWEVaC0cFg9leQLtePdIau8TNNqo3R6i9qFH5m4R0R4k1YUcrmFyO",
+#       "admin.passwordMtime": "'$(date +%FT%T%Z)'"
+#     }}'
+#   no_log: true
+# 
 
-- name: Wait for argocd-operator-controller-manager pod to be Running
-  ansible.builtin.shell: |
-    kubectl get deploy -n operators argocd-operator-controller-manager | grep 1/1
-  register: pod_status
-  retries: 60
-  delay: 5
-  until: pod_status.rc == 0
+- name: Add argocd Helm repository
+  kubernetes.core.helm_repository:
+    name: argocd
+    repo_url: https://argoproj.github.io/argo-helm
 
-- name: Ensure argo-cd namespace
+- name: Ensure argocd namespace
   kubernetes.core.k8s:
     state: present
     definition:
@@ -49,72 +134,22 @@
       metadata:
         name: argocd
 
-- name: Set ssh secret
-  kubernetes.core.k8s:
-    state: present
-    definition:
-      apiVersion: v1
-      kind: Secret
-      metadata:
-        name: github
-        namespace: argocd
-      type: Opaque
-      data:
-        privateKey: "{{ lookup('file', '../../files/ssh/ansible/id-ansible') | b64encode }}"
-        publicKey: "{{ lookup('file', '../../files/ssh/ansible/id-ansible.pub') | b64encode }}"
-        username: "{{ github.username | b64encode }}"
-        accessToken: "{{ github.accessToken | b64encode }}"
-  no_log: true
-
-- name: Add argocd cr
-  kubernetes.core.k8s:
-    state: present
-    definition:
-      apiVersion: argoproj.io/v1alpha1
-      kind: ArgoCD
-      metadata:
-        name: argocd
-        namespace: argocd
-      spec:
-        server:
-          ingress:
-            enabled: true
-            ingressClassName: nginx
-          host: "{{ argocd.hostname }}"
-          insecure: true
-        initialRepositories: |
-          - url: git@github.com:matlerbru/kubernetes.git
-            type: git
-            sshPrivateKeySecret:
-              name: github
-              key: privateKey
-          - url: ghcr.io/matlerbru/charts
-            type: helm
-            name: charts
-            usernameSecret:
-              name: github
-              key: username
-            passwordSecret:
-              name: github
-              key: accessToken
-        sourceNamespaces:
-        - "*"
-
-- name: Wait for the argocd-secret to exist
-  ansible.builtin.command:
-    cmd: kubectl -n argocd get secret argocd-secret
-  register: argocd_secret_check
-  retries: 10
-  delay: 5
-  until: argocd_secret_check.rc == 0
-  ignore_errors: false
-
-- name: Set argocd password
-  ansible.builtin.shell: |
-    ENCRYPTED_PASSWORD=$(htpasswd -bnBC 10 "" {{ argocd.password }} | tr -d ':\n' | sed 's/$2y/$2a/')
-    kubectl -n argocd patch secret argocd-secret \
-    -p '{"stringData": {
-      "admin.password": "$2a$10$vWEVaC0cFg9leQLtePdIau8TNNqo3R6i9qFH5m4R0R4k1YUcrmFyO",
-      "admin.passwordMtime": "'$(date +%FT%T%Z)'"
-    }}'
-  no_log: true
+- name: Install or upgrade argocd Helm chart
+  kubernetes.core.helm:
+    name: argocd
+    chart_ref: my-argo-cd argo/argo-cd
+    chart_version: "7.7.12"
+    namespace: argocd
+    values:
+      crds:
+        install: true
+        keep: false
+      global:
+        domain: "{{ argocd.hostname }}"
+      server:
+        ingress:
+          enabled: true
+          ingressClassName: nginx
+      redis: 
+        enabled: false
+    release_state: present

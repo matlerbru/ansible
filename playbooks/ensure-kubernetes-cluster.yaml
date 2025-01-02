@@ -94,8 +94,8 @@
   - name: Setup sealed secrets
     include_tasks: ../roles/kubernetes/setup-sealed-secrets.yaml
 
-  - name: Setup operator-lifecycle-manager
-    include_tasks: ../roles/kubernetes/setup-operator-lifecycle-manager.yaml
+#   - name: Setup operator-lifecycle-manager
+#     include_tasks: ../roles/kubernetes/setup-operator-lifecycle-manager.yaml
 
   - name: Setup argo-cd
     include_tasks: ../roles/kubernetes/setup-argocd.yaml
