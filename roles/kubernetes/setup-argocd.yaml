@@ -150,11 +150,20 @@
         install: true
         keep: false
       global:
-        domain: "{{ argocd.hostname }}"
+        domain: "{{ argocd.hostname }}-tls"
       server:
         ingress:
           enabled: true
           ingressClassName: nginx
+          path: /tls
+          extraPaths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: argocd-server
+                port:
+                  number: 80
       redis: 
         enabled: false
       dex:
