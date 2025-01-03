@@ -162,16 +162,13 @@
             url: ghcr.io/matlerbru/charts
             name: helm-repo
             type: helm
-            password: "{{ github.password }}"
-            username: "{{ github.username }}"
+        #    password: "{{ github.password }}"
+        #    username: "{{ github.username }}"
           kubernetes-repo:
             url: git@github.com:matlerbru/kubernetes.git
             name: kubernetes-repo
             type: git
             sshPrivateKey: "{{ lookup('file', '../../files/ssh/ansible/id-ansible') }}"
-# sshPrivateKeySecret:
-#   name: github
-#   key: privateKey
         params:
           server.insecure: true
     release_state: present
