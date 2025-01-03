@@ -9,6 +9,11 @@ all:
         #k8s.wrk01: 
         192.168.1.92:
           hostname: srv01.wrk01
+        192.168.1.93:
+          hostname: srv01.obj01
+          taints:
+            - key: "object-storage"
+              effect: "NoSchedule"
 
     router:
       hosts:
