@@ -16,3 +16,4 @@ namespaces:
 - unifi
 - devops
 - wireguard
+- object-storage
