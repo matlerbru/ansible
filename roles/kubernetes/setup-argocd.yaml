@@ -134,11 +134,6 @@
       metadata:
         name: argocd
 
-- name: Hash password
-  shell: |
-    htpasswd -bnBC 10 "" {{ argocd.password }} | tr -d ':\n' | sed 's/$2y/$2a/'
-  register: password_hash
-
 - name: Install or upgrade argocd Helm chart
   kubernetes.core.helm:
     name: argocd
@@ -161,7 +156,7 @@
         enabled: false
       configs:
         secret:
-          argocdServerAdminPassword: "{{ password_hash.stdout }}"
+          argocdServerAdminPassword: "{{ argocd.password }}"
         repositories:
           helm-repo:
             url: ghcr.io/matlerbru/charts
