@@ -155,15 +155,6 @@
         ingress:
           enabled: true
           ingressClassName: nginx
-          path: /tls
-          extraPaths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: argocd-server
-                port:
-                  number: 80
       redis: 
         enabled: false
       dex:
@@ -178,4 +169,6 @@
             type: helm
             password: "{{ github.password }}"
             username: "{{ github.username }}"
+        params:
+          server.insecure: true
     release_state: present
