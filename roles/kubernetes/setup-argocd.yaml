@@ -162,8 +162,14 @@
             url: ghcr.io/matlerbru/charts
             name: helm-repo
             type: helm
-            password: "{{ github.password }}"
-            username: "{{ github.username }}"
+          #  password: "{{ github.password }}"
+          #  username: "{{ github.username }}"
+          kubernetes:
+            url: git@github.com:matlerbru/kubernetes.git
+            type: git
+            sshPrivateKeySecret:
+              name: github
+              key: privateKey
         params:
           server.insecure: true
     release_state: present
