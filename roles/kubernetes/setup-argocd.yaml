@@ -38,7 +38,7 @@
           enabled: true
           ingressClassName: nginx
       redis: 
-        enabled: false
+        enabled: true
       dex:
         enabled: false
       configs:
