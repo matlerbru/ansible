@@ -2,15 +2,18 @@ all:
   children:
     kubernetesMasterNodes:
       hosts:
-        192.168.1.91: 
+        srv01.cpl01: 
           hostname: srv01.cpl01
     kubernetesWorkerNodes:
       hosts:
-        192.168.1.92:
+        srv01.wrk01:
           hostname: srv01.wrk01
         srv02.wrk02:
           hostname: srv02.wrk02
-        192.168.1.93:
+          taints:
+            - key: "critical-application"
+              effect: "NoSchedule"
+        srv01.obj01:
           hostname: srv01.obj01
           taints:
             - key: "object-storage"
