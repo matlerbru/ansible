@@ -6,9 +6,10 @@ all:
           hostname: srv01.cpl01
     kubernetesWorkerNodes:
       hosts:
-        #k8s.wrk01: 
         192.168.1.92:
           hostname: srv01.wrk01
+        192.168.1.89:
+          hostname: srv02.wrk02
         192.168.1.93:
           hostname: srv01.obj01
           taints:
