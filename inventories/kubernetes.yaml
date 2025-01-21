@@ -1,0 +1,20 @@
+all:
+  children:
+    kubernetesMasterNodes:
+      hosts:
+        srv01.cpl01: 
+          hostname: srv01.cpl01
+    kubernetesWorkerNodes:
+      hosts:
+        srv01.wrk01:
+          hostname: srv01.wrk01
+        srv02.wrk02:
+          hostname: srv02.wrk02
+          taints:
+            - key: "critical-application"
+              effect: "NoSchedule"
+        srv01.obj01:
+          hostname: srv01.obj01
+          taints:
+            - key: "object-storage"
+              effect: "NoSchedule"

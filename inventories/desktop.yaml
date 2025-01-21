@@ -1,0 +1,6 @@
+all:
+  children:
+    desktop:
+      hosts:
+        dsk01:
+          hostname: dsk01
