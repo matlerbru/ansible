@@ -13,6 +13,7 @@
       - yum-utils
     state: present
   become: true
+  become_method: sudo
 
 - name: Copy .zshrc to host
   ansible.builtin.template:
