@@ -1,0 +1,13 @@
+- name: Setup desktop
+  hosts: desktop
+
+  tasks:
+
+  - name: Install generic packages
+    include_tasks: ../roles/generic/install-packages.yaml
+
+  - name: Add ansiuble ssh keys
+    include_tasks: ../roles/generic/add-ssh-ansible-key.yaml
+
+  - name: Set hostname
+    include_tasks: ../roles/generic/set-hostname.yaml

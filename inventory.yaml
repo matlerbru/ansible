@@ -18,7 +18,6 @@ all:
           taints:
             - key: "object-storage"
               effect: "NoSchedule"
-
     router:
       hosts:
         edgerouter:
@@ -35,3 +34,7 @@ all:
             35623264343036346661643363346330326562313139623066376337626634346436663937346531
             3663343930373836343235643462666532653738313662613330
           ansible_user: ubnt
+    desktop:
+      hosts:
+        dsk01:
+          hostname: dsk01
