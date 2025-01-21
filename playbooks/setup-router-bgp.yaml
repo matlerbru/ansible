@@ -1,6 +1,6 @@
 
 - name: Setup rputer bgp
-  hosts: kubernetesMasterNodes,kubernetesWorkerNodes
+  hosts: router
 
   tasks:
 
