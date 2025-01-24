@@ -71,9 +71,11 @@
       mode: '0755'
 
   - name: Copy kube config
-    ansible.builtin.synchronize:
+    ansible.builtin.copy:
       src: "mlb@srv01.cpl01:.kube/config"
       dest: "mlb@localhost:.kube/config"
-      mode: pull
+      owner: mlb
+      group: mlb
+      mode: '0644'
 
   when: kubernetes_access | default(false)
