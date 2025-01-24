@@ -1,23 +1,24 @@
 all:
-  kubernetesMasterNodes:
-    hosts:
-      srv01.cpl01: 
-        hostname: srv01.cpl01
-        kubernetes-access: true
-  kubernetesWorkerNodes:
-    hosts:
-      srv01.wrk01:
-        hostname: srv01.wrk01
-      srv02.wrk02:
-        hostname: srv02.wrk02
-        taints:
-          - key: "critical-application"
-            effect: "NoSchedule"
-      srv01.obj01:
-        hostname: srv01.obj01
-        taints:
-          - key: "object-storage"
-            effect: "NoSchedule"
+  children:
+    kubernetesMasterNodes:
+      hosts:
+        srv01.cpl01: 
+          hostname: srv01.cpl01
+          kubernetes-access: true
+    kubernetesWorkerNodes:
+      hosts:
+        srv01.wrk01:
+          hostname: srv01.wrk01
+        srv02.wrk02:
+          hostname: srv02.wrk02
+          taints:
+            - key: "critical-application"
+              effect: "NoSchedule"
+        srv01.obj01:
+          hostname: srv01.obj01
+          taints:
+            - key: "object-storage"
+              effect: "NoSchedule"
 
 kubernetes:
   children:

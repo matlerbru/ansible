@@ -14,3 +14,9 @@
 
   - name: Set hostname
     include_tasks: ../roles/generic/set-hostname.yaml
+
+  - name: Install kubernetes access
+    include_tasks: ../roles/generic/install-kubernetes-access.yaml
+
+  - name: Copy kube config
+    include_tasks: ../roles/generic/copy-kube-config.yaml

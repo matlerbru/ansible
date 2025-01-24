@@ -5,4 +5,3 @@ all:
         dsk01:
           hostname: dsk01
           kubernetes_access: true
-

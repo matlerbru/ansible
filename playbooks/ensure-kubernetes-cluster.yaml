@@ -64,6 +64,9 @@
   - name: Install kubernetes packages
     include_tasks: ../roles/kubernetes/install-kubernetes-packages.yaml
 
+  - name: Install kubernetes access
+    include_tasks: ../roles/generic/install-kubernetes-access.yaml
+
   - name: Disable swap
     include_tasks: ../roles/kubernetes/disable-swap.yaml
 
