@@ -1,0 +1,8 @@
+
+- name: Install generic packages
+  yum:
+    name:
+      - neovim
+      - python3-neovim
+    state: present
+  become: true
