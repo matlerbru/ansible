@@ -75,5 +75,7 @@
       src: "mlb@{{ mainControlPlane }}:.kube/config"
       dest: "~/.kube/config"
       mode: pull   
+    environment:
+      PATH: "/usr/bin:/usr/sbin:/bin:/sbin"
 
   when: kubernetes_access | default(false)
