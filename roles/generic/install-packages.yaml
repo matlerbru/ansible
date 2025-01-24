@@ -1,8 +1,4 @@
 
-- name: Test privilege escalation
-  command: whoami
-  become: true
-
 - name: Install generic packages
   yum:
     name:
