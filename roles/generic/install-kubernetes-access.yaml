@@ -71,8 +71,6 @@
       mode: '0755'
 
   - name: Copy kube config
-    ansible.builtin.command: "scp -o StrictHostKeyChecking=no mlb@{{ mainControlPlane }}:.kube/config .kube/config"
-    environment:
-      ANSIBLE_SSH_ARGS: "-o ControlMaster=no -o ControlPath=none"
+    ansible.builtin.command: "scp mlb@{{ mainControlPlane }}:.kube/config .kube/config"
 
   when: kubernetes_access | default(false)
