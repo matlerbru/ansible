@@ -77,4 +77,7 @@
       mode: pull   
       rsync_path: "/usr/bin/rsync"
       ssh_args: "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+    environment:
+      PATH: "/usr/bin:/usr/sbin:/bin:/sbin"
+      
   when: kubernetes_access | default(false)
