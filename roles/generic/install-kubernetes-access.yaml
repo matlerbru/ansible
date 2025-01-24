@@ -75,7 +75,6 @@
       src: "mlb@{{ mainControlPlane }}:.kube/config"
       dest: "~/.kube/config"
       mode: pull   
-    environment:
-      PATH: "/usr/bin:/usr/sbin:/bin:/sbin"
-
+      rsync_path: "/usr/bin/rsync"
+      ssh_args: "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
   when: kubernetes_access | default(false)
