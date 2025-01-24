@@ -71,7 +71,7 @@
       mode: '0755'
  #     owner: mlb
  #     group: mlb
-    become: true
+ #   become: true
 
   - name: Copy kube config
     ansible.builtin.command: |
