@@ -12,7 +12,7 @@ zstyle :compinstall filename '/home/mlb/.zshrc'
 autoload -Uz compinit
 compinit
 
-{% if kubernetes_access %}
+{% if kubernetes_access | default(false) %}
 # kubernetes
 source <(kubectl completion zsh)
 
