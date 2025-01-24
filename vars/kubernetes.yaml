@@ -19,4 +19,4 @@ namespaces:
 - object-storage
 - minecraft
 
-main-control-plane: srv01.cpl01
+mainControlPlane: srv01.cpl01

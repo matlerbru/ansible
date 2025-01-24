@@ -65,7 +65,7 @@
       state: absent
 
   - name: Copy kube config
-    shell: scp mlb@{{ main-control-plane }}:.kube/config ~/.kube/config
+    shell: scp mlb@{{ mainControlPlane }}:.kube/config ~/.kube/config
     args:
       warn: false
 
