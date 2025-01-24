@@ -1,4 +1,8 @@
 
+- name: Test privilege escalation
+  command: whoami
+  become: true
+
 - name: Install generic packages
   yum:
     name:
@@ -9,7 +13,6 @@
       - yum-utils
     state: present
   become: true
-  become_user: root
 
 - name: Copy .zshrc to host
   ansible.builtin.template:
@@ -21,4 +24,3 @@
     name: mlb
     shell: /bin/zsh
   become: true
-  become_user: root
