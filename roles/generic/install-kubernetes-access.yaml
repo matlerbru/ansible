@@ -72,7 +72,6 @@
 
   - name: Copy kube config
     ansible.builtin.command: |
-      scp -o StrictHostKeyChecking=no \
-      mlb@{{ mainControlPlane }}:.kube/config ~/.kube/config
+      scp -o StrictHostKeyChecking=no mlb@{{ mainControlPlane }}:.kube/config ~/.kube/config
 
   when: kubernetes_access | default(false)
