@@ -4,6 +4,7 @@ all:
       hosts:
         srv01.cpl01: 
           hostname: srv01.cpl01
+          kubernetes-access: true
     kubernetesWorkerNodes:
       hosts:
         srv01.wrk01:

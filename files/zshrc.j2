@@ -12,9 +12,17 @@ zstyle :compinstall filename '/home/mlb/.zshrc'
 autoload -Uz compinit
 compinit
 
+{% if kubernetes_access %}
+# kubernetes
 source <(kubectl completion zsh)
 
 eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/id-ansible
 
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+{% endif %}
+
+# aliases
+
+alias vim=neovim
+alias n=neovim

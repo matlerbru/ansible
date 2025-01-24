@@ -1,5 +1,5 @@
 
-- name: Install generic packages
+- name: Install neovim package
   yum:
     name:
       - neovim
