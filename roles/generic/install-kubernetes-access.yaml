@@ -69,12 +69,8 @@
       path: ~/.kube
       state: directory
       mode: '0755'
- #     owner: mlb
- #     group: mlb
- #   become: true
 
   - name: Copy kube config
-    ansible.builtin.command: |
-      "scp -o StrictHostKeyChecking=no mlb@{{ mainControlPlane }}:.kube/config ~/.kube/config"
+    ansible.builtin.command: "scp -o StrictHostKeyChecking=no mlb@{{ mainControlPlane }}:.kube/config .kube/config"
 
   when: kubernetes_access | default(false)
