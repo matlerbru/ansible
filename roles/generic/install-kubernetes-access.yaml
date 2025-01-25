@@ -2,97 +2,90 @@
   include_vars:
     file: ../../vars/kubernetes.yaml
 
-
 - block:
+    - name: Add Kubernetes repository
+      ansible.builtin.yum_repository:
+        name: kubernetes
+        description: Kubernetes Repository
+        baseurl: https://pkgs.k8s.io/core:/stable:/v1.31/rpm/
+        gpgcheck: true
+        repo_gpgcheck: yes
+        enabled: true
+        gpgkey:
+          - https://pkgs.k8s.io/core:/stable:/v1.31/rpm/repodata/repomd.xml.key
+        exclude: "kube*"
+      become: true
 
-  - name: Add Kubernetes repository
-    ansible.builtin.yum_repository:
-      name: kubernetes
-      description: Kubernetes Repository
-      baseurl: https://pkgs.k8s.io/core:/stable:/v1.31/rpm/
-      gpgcheck: true
-      repo_gpgcheck: yes
-      enabled: true
-      gpgkey:
-        - https://pkgs.k8s.io/core:/stable:/v1.31/rpm/repodata/repomd.xml.key
-      exclude: "kube*"
-    become: true
+    - name: Install Kubernetes packages
+      ansible.builtin.yum:
+        name:
+          - kubectl
+        state: present
+        disable_excludes: kubernetes
+      become: true
 
-  - name: Install Kubernetes packages
-    ansible.builtin.yum:
-      name:
-        - kubectl
-      state: present
-      disable_excludes: kubernetes
-    become: true
+    - name: Fetch the latest Kubeseal version
+      ansible.builtin.uri:
+        url: https://api.github.com/repos/bitnami-labs/sealed-secrets/tags
+        return_content: yes
+      register: kubeseal_tags
 
-  - name: Fetch the latest Kubeseal version
-    ansible.builtin.uri:
-      url: https://api.github.com/repos/bitnami-labs/sealed-secrets/tags
-      return_content: yes
-    register: kubeseal_tags
+    - name: Parse Kubeseal version
+      ansible.builtin.set_fact:
+        kubeseal_version: "{{ kubeseal_tags.json[0].name[1:] }}"
+      when: kubeseal_tags.status == 200
 
-  - name: Parse Kubeseal version
-    ansible.builtin.set_fact:
-      kubeseal_version: "{{ kubeseal_tags.json[0].name[1:] }}"
-    when: kubeseal_tags.status == 200
+    - name: Fail if Kubeseal version is not found
+      ansible.builtin.fail:
+        msg: "Failed to fetch the latest Kubeseal version."
+      when: kubeseal_version is undefined
 
-  - name: Fail if Kubeseal version is not found
-    ansible.builtin.fail:
-      msg: "Failed to fetch the latest Kubeseal version."
-    when: kubeseal_version is undefined
+    - name: Download Kubeseal binary
+      ansible.builtin.get_url:
+        url: "https://github.com/bitnami-labs/sealed-secrets/releases/download/v{{ kubeseal_version }}/kubeseal-{{ kubeseal_version }}-linux-amd64.tar.gz"
+        dest: "/tmp/kubeseal-{{ kubeseal_version }}-linux-amd64.tar.gz"
+        mode: "0644"
 
-  - name: Download Kubeseal binary
-    ansible.builtin.get_url:
-      url: "https://github.com/bitnami-labs/sealed-secrets/releases/download/v{{ kubeseal_version }}/kubeseal-{{ kubeseal_version }}-linux-amd64.tar.gz"
-      dest: "/tmp/kubeseal-{{ kubeseal_version }}-linux-amd64.tar.gz"
-      mode: "0644"
+    - name: Extract Kubeseal binary
+      ansible.builtin.unarchive:
+        src: "/tmp/kubeseal-{{ kubeseal_version }}-linux-amd64.tar.gz"
+        dest: "/tmp/"
+        remote_src: yes
 
-  - name: Extract Kubeseal binary
-    ansible.builtin.unarchive:
-      src: "/tmp/kubeseal-{{ kubeseal_version }}-linux-amd64.tar.gz"
-      dest: "/tmp/"
-      remote_src: yes
+    - name: Install Kubeseal
+      ansible.builtin.command:
+        cmd: install -m 755 /tmp/kubeseal /usr/local/bin/kubeseal
+      become: true
 
-  - name: Install Kubeseal
-    ansible.builtin.command:
-      cmd: install -m 755 /tmp/kubeseal /usr/local/bin/kubeseal
-    become: true
+    - name: Clean up temporary files
+      ansible.builtin.file:
+        path: "/tmp/kubeseal-{{ kubeseal_version }}-linux-amd64.tar.gz"
+        state: absent
 
-  - name: Clean up temporary files
-    ansible.builtin.file:
-      path: "/tmp/kubeseal-{{ kubeseal_version }}-linux-amd64.tar.gz"
-      state: absent
+    - name: Fetch kube config from remote server to localhost
+      fetch:
+        src: "/home/mlb/.kube/config"
+        dest: "~/local_kube_config"
+        flat: yes
+      delegate_to: localhost
+      run_once: true
 
-  - name: Fetch kube config from remote server to localhost
-    fetch:
-      src: "/home/mlb/.kube/config"  # Path to the file on the remote server
-      dest: "~/local_kube_config"   # Path to save the file locally on localhost
-      flat: yes                     # Prevent Ansible from creating host-specific subdirectories
-    delegate_to: localhost
-    run_once: true
+    - name: Ensure the ~/.kube directory exists
+      ansible.builtin.file:
+        path: "~/.kube"
+        state: directory
+        mode: '0755'
 
-  - name: Ensure the ~/.kube directory exists
-    ansible.builtin.file:
-      path: ~/.kube
-      state: directory
-      mode: '0755'
-
-  - name: Copy kube config
-    ansible.builtin.copy:
-      src: "~/local_kube_config"
-      dest: "~/.kube/config"
+    - name: Copy kube config
+      ansible.builtin.copy:
+        src: "~/local_kube_config"
+        dest: "~/.kube/config"
 
   when: kubernetes_access | default(false)
 
-block:
-  - name: Cleanup kube config from localhost
-    ansible.builtin.file:
-      path: "/home/mlb/.kube/config"
-      state: absent
-    run_once: true
-
-always:
-  - name: Ensure cleanup runs even on failure
-    ansible.builtin.debug:
-      msg: "Cleanup successfully called"
+  always:
+    - name: Cleanup kube config from localhost
+      ansible.builtin.file:
+        path: "~/local_kube_config"
+        state: absent
+      run_once: true
