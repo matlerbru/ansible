@@ -83,15 +83,16 @@
       src: "~/local_kube_config"
       dest: "~/.kube/config"
 
-  block:
-    - name: Cleanup kube config from localhost
-      ansible.builtin.file:
-        path: "/home/mlb/.kube/config"
-        state: absent
-
-  always:
-    - name: Ensure cleanup runs even on failure
-      ansible.builtin.debug:
-        msg: "Cleanup successfully called"
-
   when: kubernetes_access | default(false)
+
+block:
+  - name: Cleanup kube config from localhost
+    ansible.builtin.file:
+      path: "/home/mlb/.kube/config"
+      state: absent
+    run_once: true
+
+always:
+  - name: Ensure cleanup runs even on failure
+    ansible.builtin.debug:
+      msg: "Cleanup successfully called"
