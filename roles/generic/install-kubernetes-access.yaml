@@ -69,6 +69,9 @@
         flat: yes
       delegate_to: localhost
       run_once: true
+      vars:
+        ansible_host: "{{ mainControlPlane }}"
+        ansible_user: "mlb"
 
     - name: Ensure the ~/.kube directory exists
       ansible.builtin.file:
