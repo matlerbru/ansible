@@ -62,33 +62,9 @@
         path: "/tmp/kubeseal-{{ kubeseal_version }}-linux-amd64.tar.gz"
         state: absent
 
-    - name: Fetch kube config from remote server to localhost
-      fetch:
-        src: "/home/mlb/.kube/config"
-        dest: "~/local_kube_config"
-        flat: yes
-      delegate_to: localhost
-      run_once: true
-      vars:
-        ansible_host: "{{ mainControlPlane }}"
-        ansible_user: "mlb"
-
-    - name: Ensure the ~/.kube directory exists
-      ansible.builtin.file:
-        path: "~/.kube"
-        state: directory
-        mode: '0755'
-
     - name: Copy kube config
       ansible.builtin.copy:
-        src: "~/local_kube_config"
+        src: "../../files/kubernetes/config"
         dest: "~/.kube/config"
 
   when: kubernetes_access | default(false)
-
-  always:
-    - name: Cleanup kube config from localhost
-      ansible.builtin.file:
-        path: "~/local_kube_config"
-        state: absent
-      run_once: true
