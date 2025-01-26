@@ -1,0 +1,7 @@
+
+- name: Install generic packages
+  yum:
+    name:
+      - ansible
+    state: present
+  become: true

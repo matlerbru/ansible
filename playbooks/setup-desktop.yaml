@@ -6,6 +6,9 @@
   - name: Install generic packages
     include_tasks: ../roles/generic/install-packages.yaml
 
+  - name: Install desktop packages
+    include_tasks: ../roles/desktop/install-packages.yaml
+
   - name: Install neovim
     include_tasks: ../roles/generic/install-neovim.yaml
 
