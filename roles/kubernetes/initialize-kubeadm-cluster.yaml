@@ -54,6 +54,8 @@
   delay: 10
   until: kubectl_check.rc == 0
   ignore_errors: no
+  become: true
+  become_user: "{{ user }}"
 
 - name: Wait for Kubernetes API server to be available
   wait_for:
