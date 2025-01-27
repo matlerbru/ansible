@@ -1,4 +1,3 @@
-
 - name: Get the status of olm-operator
   ansible.builtin.shell: kubectl -n olm get deployments -o custom-columns=NAME:.metadata.name,READY:.status.readyReplicas | grep olm-operator
   register: olm_operator_status
@@ -34,3 +33,5 @@
       kind: Namespace
       metadata:
         name: operators
+  become: true
+  become_user: "{{ user }}"

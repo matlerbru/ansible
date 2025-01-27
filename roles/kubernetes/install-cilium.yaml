@@ -1,8 +1,9 @@
-
 - name: Add Cilium Helm repository
   kubernetes.core.helm_repository:
     name: cilium
     repo_url: https://helm.cilium.io/
+  become: true
+  become_user: "{{ user }}"
 
 - name: Install or upgrade Cilium Helm chart
   kubernetes.core.helm:
@@ -10,9 +11,9 @@
     chart_ref: cilium/cilium
     chart_version: "1.16.2"
     namespace: kube-system
-    values: 
+    values:
       hubble:
-        relay:  
+        relay:
           enabled: true
         ui:
           enabled: true
@@ -24,6 +25,8 @@
       operator:
         replicas: 1
     release_state: present
+  become: true
+  become_user: "{{ user }}"
 
 - name: Get the latest Cilium CLI version
   ansible.builtin.shell: |
@@ -38,13 +41,13 @@
   ansible.builtin.get_url:
     url: "https://github.com/cilium/cilium-cli/releases/download/{{ cilium_cli_version.stdout }}/cilium-linux-{{ cli_arch }}.tar.gz"
     dest: "/tmp/cilium-linux-{{ cli_arch }}.tar.gz"
-    mode: '0644'
+    mode: "0644"
 
 - name: Download Cilium CLI checksum file
   ansible.builtin.get_url:
     url: "https://github.com/cilium/cilium-cli/releases/download/{{ cilium_cli_version.stdout }}/cilium-linux-{{ cli_arch }}.tar.gz.sha256sum"
     dest: "/tmp/cilium-linux-{{ cli_arch }}.tar.gz.sha256sum"
-    mode: '0644'
+    mode: "0644"
 
 - name: Verify checksum
   ansible.builtin.command:

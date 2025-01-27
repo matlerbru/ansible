@@ -1,8 +1,9 @@
-
 - name: Add metrics-server Helm repository
   kubernetes.core.helm_repository:
     name: metrics-server
     repo_url: https://kubernetes-sigs.github.io/metrics-server/
+  become: true
+  become_user: "{{ user }}"
 
 - name: Install or upgrade metrics-server Helm chart
   kubernetes.core.helm:
@@ -10,7 +11,9 @@
     chart_ref: metrics-server/metrics-server
     chart_version: "3.12.2"
     namespace: kube-system
-    values: 
+    values:
       args:
-      - --kubelet-insecure-tls
+        - --kubelet-insecure-tls
     release_state: present
+  become: true
+  become_user: "{{ user }}"

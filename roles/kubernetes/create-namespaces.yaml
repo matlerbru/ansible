@@ -1,4 +1,3 @@
-
 - name: Include Kubernetes variables
   include_vars:
     file: ../../vars/kubernetes.yaml
@@ -14,3 +13,5 @@
         labels:
           argocd.argoproj.io/managed-by: argocd
   loop: "{{ namespaces }}"
+  become: true
+  become_user: "{{ user }}"

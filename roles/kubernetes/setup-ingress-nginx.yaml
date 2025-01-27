@@ -1,4 +1,3 @@
-
 - name: Add ingress-nginx Helm repository
   kubernetes.core.helm_repository:
     name: ingress-nginx
@@ -12,6 +11,8 @@
       kind: Namespace
       metadata:
         name: ingress-nginx
+  become: true
+  become_user: "{{ user }}"
 
 - name: Install or upgrade ingress-nginx Helm chart
   kubernetes.core.helm:
@@ -26,3 +27,5 @@
         ingressClassResource:
           default: true
     release_state: present
+  become: true
+  become_user: "{{ user }}"

@@ -1,4 +1,3 @@
-
 - name: Include Kubernetes variables
   include_vars:
     file: ../../vars/kubernetes.yaml
@@ -11,6 +10,8 @@
   kubernetes.core.helm_repository:
     name: argo
     repo_url: https://argoproj.github.io/argo-helm
+  become: true
+  become_user: "{{ user }}"
 
 - name: Ensure argocd namespace
   kubernetes.core.k8s:
@@ -20,6 +21,8 @@
       kind: Namespace
       metadata:
         name: argocd
+  become: true
+  become_user: "{{ user }}"
 
 - name: Install or upgrade argocd Helm chart
   kubernetes.core.helm:
@@ -37,7 +40,7 @@
         ingress:
           enabled: true
           ingressClassName: nginx
-      redis: 
+      redis:
         enabled: true
       dex:
         enabled: false
@@ -57,3 +60,5 @@
         params:
           server.insecure: true
     release_state: present
+  become: true
+  become_user: "{{ user }}"

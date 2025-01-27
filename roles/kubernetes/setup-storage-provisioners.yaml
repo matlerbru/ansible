@@ -1,8 +1,9 @@
-
 - name: Add nfs csi dricer Helm repository
   kubernetes.core.helm_repository:
     name: csi-driver-nfs
     repo_url: https://raw.githubusercontent.com/kubernetes-csi/csi-driver-nfs/master/charts
+  become: true
+  become_user: "{{ user }}"
 
 - name: Install or upgrade nfs csi driver Helm chart
   kubernetes.core.helm:
@@ -11,6 +12,8 @@
     chart_version: "4.9.0"
     namespace: kube-system
     release_state: present
+  become: true
+  become_user: "{{ user }}"
 
 - name: Delete existing Synology CSI StorageClass
   kubernetes.core.k8s:
@@ -20,6 +23,8 @@
       kind: StorageClass
       metadata:
         name: synology
+  become: true
+  become_user: "{{ user }}"
 
 - name: Add Synology CSI StorageClass
   kubernetes.core.k8s:
@@ -40,6 +45,8 @@
       mountOptions:
         - hard
         - nfsvers=4.1
+  become: true
+  become_user: "{{ user }}"
 
 - name: Delete existing Synology backup CSI StorageClass
   kubernetes.core.k8s:
@@ -49,6 +56,8 @@
       kind: StorageClass
       metadata:
         name: synology-backup
+  become: true
+  become_user: "{{ user }}"
 
 - name: Add Synology backup CSI StorageClass
   kubernetes.core.k8s:
@@ -67,3 +76,5 @@
       mountOptions:
         - hard
         - nfsvers=4.1
+  become: true
+  become_user: "{{ user }}"
