@@ -1,3 +1,7 @@
+- name: Include generic variables
+  include_vars:
+    file: ../../vars/generic.yaml
+
 - name: Include Kubernetes variables
   include_vars:
     file: ../../vars/kubernetes.yaml
@@ -64,13 +68,13 @@
 
     - name: Ensure the ~/.kube directory exists
       ansible.builtin.file:
-        path: "~/.kube"
+        path: "{{ userpath }}/.kube"
         state: directory
-        mode: '0755'
+        mode: "0755"
 
     - name: Copy kube config
       ansible.builtin.copy:
         src: "../../files/kubernetes/config"
-        dest: "~/.kube/config"
+        dest: "{{ userpath }}/.kube/config"
 
   when: kubernetes_access | default(false)
