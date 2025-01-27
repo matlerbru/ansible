@@ -23,7 +23,7 @@
 
 - name: Check if the node has the "not-ready" taint
   ansible.builtin.shell: |
-    kubectl describe node $(hostname) | grep "node.kubernetes.io/not-ready:NoSchedule"
+    kubectl describe node $HOSTNAME | grep "node.kubernetes.io/not-ready:NoSchedule"
   register: taint_check
   delegate_to: "{{ groups['kubernetesMasterNodes'][0] }}"
   ignore_errors: true
