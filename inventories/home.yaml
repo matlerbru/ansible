@@ -2,7 +2,7 @@ all:
   children:
     kubernetesMasterNodes:
       hosts:
-        srv01.cpl01: 
+        srv01.cpl01:
           hostname: srv01.cpl01
           kubernetes-access: true
     kubernetesWorkerNodes:
@@ -19,6 +19,11 @@ all:
           taints:
             - key: "object-storage"
               effect: "NoSchedule"
+    desktop:
+      hosts:
+        dsk01:
+          hostname: dsk01
+          kubernetes_access: true
 
 kubernetes:
   children:
