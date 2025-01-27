@@ -15,12 +15,11 @@ compinit
 {% if kubernetes_access | default(false) %}
 # kubernetes
 source <(kubectl completion zsh)
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+{% endif %}
 
 eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/id-ansible
-
-export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
-{% endif %}
 
 # aliases
 

@@ -4,7 +4,7 @@
 
 - name: Install kubectx
   ansible.builtin.shell: |
-    source {{ userpath }}/.zshrc \
+    source <(kubectl completion zsh)
     kubectl krew install ctx
   run_once: true
   become: true

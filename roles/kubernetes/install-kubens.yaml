@@ -4,7 +4,7 @@
 
 - name: Install kubens
   ansible.builtin.shell: |
-    source {{ userpath }}/.zshrc && \
+    source <(kubectl completion zsh)
     kubectl krew install ns
   run_once: true
   become: true
