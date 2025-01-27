@@ -1,4 +1,3 @@
-
 - name: Include Kubernetes variables
   include_vars:
     file: ../../vars/vault.yaml
@@ -31,10 +30,4 @@
     mode: "0644"
     owner: root
     group: root
-  become: true
-
-- name: Restart containerd service
-  ansible.builtin.systemd:
-    name: containerd
-    state: restarted
   become: true
