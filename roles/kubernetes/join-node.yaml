@@ -32,7 +32,7 @@
 
 - name: Untaint the node if "not-ready" taint exists
   ansible.builtin.shell: |
-    kubectl taint node $(hostname) node.kubernetes.io/not-ready:NoSchedule-
+    kubectl taint node $HOSTNAME node.kubernetes.io/not-ready:NoSchedule-
   delegate_to: "{{ groups['kubernetesMasterNodes'][0] }}"
   when: taint_check.rc == 0
   become: true

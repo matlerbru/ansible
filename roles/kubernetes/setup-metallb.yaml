@@ -33,6 +33,8 @@
 - name: Check if the pods are ready
   ansible.builtin.shell: |
     kubectl -n metallb-system rollout status daemonset metallb-speaker --timeout 120s
+  become: true
+  become_user: "{{ user }}"
 
 - name: Create ip-address pool
   kubernetes.core.k8s:
