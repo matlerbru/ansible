@@ -11,7 +11,7 @@
   register: cluster_check
   ignore_errors: true
   become: true
-  become_user: { { user } }
+  become_user: "{{ user }}"
 
 - name: Initialize cluster
   ansible.builtin.shell: |
