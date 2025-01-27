@@ -8,3 +8,4 @@
     kubectl krew install ns
   run_once: true
   become: true
+  become_user: "{{ user }}"
