@@ -7,15 +7,24 @@
     path: "{{ userpath }}/.ssh"
     state: directory
     mode: "0700"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+  become: true
 
 - name: Add ansible public key
   ansible.builtin.copy:
     src: ../../files/ssh/ansible/id-ansible.pub
     dest: "{{ userpath }}/.ssh/id-ansible.pub"
     mode: "0644"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+  become: true
 
 - name: Add ansible private key
   ansible.builtin.copy:
     src: ../../files/ssh/ansible/id-ansible
     dest: "{{ userpath }}/.ssh/id-ansible"
     mode: "0600"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+  become: true

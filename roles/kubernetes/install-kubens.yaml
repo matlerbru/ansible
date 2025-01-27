@@ -7,3 +7,4 @@
     source {{ userpath }}/.zshrc && \
     kubectl krew install ns
   run_once: true
+  become: true

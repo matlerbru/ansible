@@ -71,10 +71,16 @@
         path: "{{ userpath }}/.kube"
         state: directory
         mode: "0755"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+      become: true
 
     - name: Copy kube config
       ansible.builtin.copy:
         src: "../../files/kubernetes/config"
         dest: "{{ userpath }}/.kube/config"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+      become: true
 
   when: kubernetes_access | default(false)

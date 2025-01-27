@@ -7,3 +7,4 @@
     source {{ userpath }}/.zshrc \
     kubectl krew install ctx
   run_once: true
+  become: true

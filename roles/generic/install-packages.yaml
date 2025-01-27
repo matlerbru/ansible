@@ -18,6 +18,9 @@
   ansible.builtin.template:
     src: ../../files/zshrc.j2
     dest: "{{ userpath }}/.zshrc"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+  become: true
 
 - name: Set default shell to zsh
   user:
