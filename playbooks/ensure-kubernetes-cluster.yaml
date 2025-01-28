@@ -106,9 +106,6 @@
   - name: Setup sealed secrets
     include_tasks: ../roles/kubernetes/setup-sealed-secrets.yaml
 
-#   - name: Setup operator-lifecycle-manager
-#     include_tasks: ../roles/kubernetes/setup-operator-lifecycle-manager.yaml
-
   - name: Setup argo-cd
     include_tasks: ../roles/kubernetes/setup-argocd.yaml
 
@@ -118,8 +115,8 @@
   - name: Install krew
     include_tasks: ../roles/kubernetes/install-krew.yaml
 
-  - name: Install kubens
-    include_tasks: ../roles/kubernetes/install-kubens.yaml
+#  - name: Install kubens
+#    include_tasks: ../roles/kubernetes/install-kubens.yaml
 
   - name: Setup metrics server
     include_tasks: ../roles/kubernetes/setup-metrics-server.yaml
