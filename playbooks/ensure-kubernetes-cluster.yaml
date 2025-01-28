@@ -36,6 +36,9 @@
   - name: Setup containerd
     include_tasks: ../roles/kubernetes/setup-containerd.yaml
 
+  - name: Copy kube config
+    include_tasks: ../roles/kubernetes/add-kube-config.yaml
+
   - name: Install cluster
     include_tasks: ../roles/kubernetes/initialize-kubeadm-cluster.yaml
 

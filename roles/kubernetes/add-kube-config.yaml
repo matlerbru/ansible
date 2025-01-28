@@ -1,0 +1,9 @@
+- name: Check if kube config exists on localhost
+  local_action: stat path=../../files/kubernetes/config
+  register: local_file_stat
+
+- name: Add kube config
+  copy:
+    src: ../../files/kubernetes/config
+    dest: ~/.kube/config
+  when: local_file_stat.stat.exists
