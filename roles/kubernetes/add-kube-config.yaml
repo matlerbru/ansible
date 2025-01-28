@@ -1,9 +1,20 @@
 - name: Check if kube config exists on localhost
   local_action: stat path=../../files/kubernetes/config
-  register: local_file_stat
+  register: local_file
+
+- name: Log a message if kube config does not exist
+  debug:
+    msg: "Kube config does not exist at ../../files/kubernetes/config"
+  when: not local_file.stat.exists
+
+- name: Ensure the ~/.kube directory exists
+  ansible.builtin.file:
+    path: "~/.kube"
+    state: directory
+    mode: "0755"
 
 - name: Add kube config
   copy:
     src: ../../files/kubernetes/config
     dest: ~/.kube/config
-  when: local_file_stat.stat.exists
+  when: local_file.stat.exists
