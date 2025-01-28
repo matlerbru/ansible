@@ -37,7 +37,7 @@
     dest: "~/.kube/config"
     mode: "0644"
     remote_src: true
-  when: admin_conf_stat.stat.exists
+  when: admin_conf_stat.stat.exists and cluster_check.rc != 0
 
 - name: Wait for kubectl to be available
   command: kubectl version
