@@ -9,3 +9,4 @@
     src: ../../files/kubernetes/config
     dest: ~/.kube/config
   ignore_errors: true
+  become: true
