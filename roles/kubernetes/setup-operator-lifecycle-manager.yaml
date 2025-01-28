@@ -33,5 +33,3 @@
       kind: Namespace
       metadata:
         name: operators
-  become: true
-  become_user: "{{ user }}"

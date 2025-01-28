@@ -2,8 +2,6 @@
   kubernetes.core.helm_repository:
     name: prometheus-community
     repo_url: https://prometheus-community.github.io/helm-charts
-  become: true
-  become_user: "{{ user }}"
 
 - name: Install or upgrade prometheus-operator-crds Helm chart
   kubernetes.core.helm:
@@ -12,5 +10,3 @@
     chart_version: "15.0.0"
     namespace: kube-system
     release_state: present
-  become: true
-  become_user: "{{ user }}"

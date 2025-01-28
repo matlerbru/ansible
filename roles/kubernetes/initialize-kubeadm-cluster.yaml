@@ -10,8 +10,6 @@
   ansible.builtin.command: kubectl get nodes --no-headers
   register: cluster_check
   ignore_errors: true
-  become: true
-  become_user: "{{ user }}"
 
 - name: Initialize cluster
   ansible.builtin.shell: |
@@ -29,23 +27,17 @@
 
 - name: Ensure the ~/.kube directory exists
   ansible.builtin.file:
-    path: "{{ userpath }}/.kube"
+    path: "~/.kube"
     state: directory
     mode: "0755"
-    owner: "{{ user }}"
-    group: "{{ user }}"
-  become: true
 
 - name: Copy kubeconfig to user's .kube directory
   ansible.builtin.copy:
     src: /etc/kubernetes/admin.conf
-    dest: "{{ userpath }}/.kube/config"
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    dest: "~/.kube/config"
     mode: "0644"
     remote_src: true
   when: admin_conf_stat.stat.exists
-  become: true
 
 - name: Wait for kubectl to be available
   command: kubectl version
@@ -54,8 +46,6 @@
   delay: 10
   until: kubectl_check.rc == 0
   ignore_errors: no
-  become: true
-  become_user: "{{ user }}"
 
 - name: Wait for Kubernetes API server to be available
   wait_for:

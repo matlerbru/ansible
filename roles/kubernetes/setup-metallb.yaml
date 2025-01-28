@@ -6,8 +6,6 @@
   kubernetes.core.helm_repository:
     name: metallb
     repo_url: https://metallb.github.io/metallb
-  become: true
-  become_user: "{{ user }}"
 
 - name: Ensure metallb-system namespace
   kubernetes.core.k8s:
@@ -17,8 +15,6 @@
       kind: Namespace
       metadata:
         name: metallb-system
-  become: true
-  become_user: "{{ user }}"
 
 - name: Install or upgrade metallb Helm chart
   kubernetes.core.helm:
@@ -27,14 +23,10 @@
     chart_version: "0.14.8"
     namespace: metallb-system
     release_state: present
-  become: true
-  become_user: "{{ user }}"
 
 - name: Check if the pods are ready
   ansible.builtin.shell: |
     kubectl -n metallb-system rollout status daemonset metallb-speaker --timeout 120s
-  become: true
-  become_user: "{{ user }}"
 
 - name: Create ip-address pool
   kubernetes.core.k8s:
@@ -48,8 +40,6 @@
       spec:
         addresses:
           - "{{ metallb.addressRange }}"
-  become: true
-  become_user: "{{ user }}"
 
 - name: Create BGPadvertisement
   kubernetes.core.k8s:
@@ -63,8 +53,6 @@
       spec:
         ipAddressPools:
           - pool
-  become: true
-  become_user: "{{ user }}"
 
 - name: Create L2Advertisement
   kubernetes.core.k8s:
@@ -78,8 +66,6 @@
       spec:
         ipAddressPools:
           - pool
-  become: true
-  become_user: "{{ user }}"
 
 - name: Create BGP peer
   kubernetes.core.k8s:
@@ -95,5 +81,3 @@
         peerASN: 64512
         peerAddress: "{{ metallb.peerAddress }}"
         peerPort: 179
-  become: true
-  become_user: "{{ user }}"

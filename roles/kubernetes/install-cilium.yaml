@@ -2,8 +2,6 @@
   kubernetes.core.helm_repository:
     name: cilium
     repo_url: https://helm.cilium.io/
-  become: true
-  become_user: "{{ user }}"
 
 - name: Install or upgrade Cilium Helm chart
   kubernetes.core.helm:
@@ -25,8 +23,6 @@
       operator:
         replicas: 1
     release_state: present
-  become: true
-  become_user: "{{ user }}"
 
 - name: Get the latest Cilium CLI version
   ansible.builtin.shell: |

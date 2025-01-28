@@ -13,5 +13,3 @@
         labels:
           argocd.argoproj.io/managed-by: argocd
   loop: "{{ namespaces }}"
-  become: true
-  become_user: "{{ user }}"

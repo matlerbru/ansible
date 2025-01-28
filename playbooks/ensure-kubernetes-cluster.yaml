@@ -115,9 +115,6 @@
   - name: Install krew
     include_tasks: ../roles/kubernetes/install-krew.yaml
 
-#  - name: Install kubens
-#    include_tasks: ../roles/kubernetes/install-kubens.yaml
-
   - name: Setup metrics server
     include_tasks: ../roles/kubernetes/setup-metrics-server.yaml
 
