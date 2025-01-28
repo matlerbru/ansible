@@ -8,4 +8,4 @@
   copy:
     src: ../../files/kubernetes/config
     dest: ~/.kube/config
-  when: local_file.stat.exists
+  ignore_errors: true
