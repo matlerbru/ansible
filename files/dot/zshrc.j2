@@ -32,6 +32,7 @@ POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
 source ~/powerlevel10k/powerlevel10k.zsh-theme
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
+
 # aliases
 
 alias vim=nvim
@@ -51,3 +52,8 @@ alias ...='cd ../..'
 alias ....='cd ../../..'
 alias .....='cd ../../../..'
 alias ......='cd ../../../../..'
+
+# start tmux on interactive mode
+if [[ -z "$TMUX" && -n "$PS1" ]]; then
+    exec tmux
+fi
