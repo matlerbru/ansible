@@ -1,0 +1,7 @@
+- name: Copy .tmux.conf to host
+  ansible.builtin.template:
+    src: ../../files/dot/tmux.conf
+    dest: "{{ userpath }}/.tmux.conf"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+  become: true

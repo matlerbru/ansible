@@ -11,7 +11,7 @@
 
 - name: Copy .zshrc to host
   ansible.builtin.template:
-    src: ../../files/zshrc.j2
+    src: ../../files/dot/zshrc.j2
     dest: "{{ userpath }}/.zshrc"
     owner: "{{ user }}"
     group: "{{ user }}"
@@ -29,3 +29,11 @@
     creates: ~/powerlevel10k
   become: true
   become_user: "{{ user }}"
+
+- name: Copy .p10k.zsh to host
+  ansible.builtin.template:
+    src: ../../files/dot/p10k.zsh
+    dest: "{{ userpath }}/.p10k.zsh"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+  become: true
