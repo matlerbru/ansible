@@ -31,7 +31,7 @@
   become_user: "{{ user }}"
 
 - name: Copy .p10k.zsh to host
-  ansible.builtin.template:
+  ansible.builtin.copy:
     src: ../../files/dot/p10k.zsh
     dest: "{{ userpath }}/.p10k.zsh"
     owner: "{{ user }}"
