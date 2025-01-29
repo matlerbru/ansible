@@ -28,6 +28,8 @@ if ! pgrep -u "$USER" ssh-agent > /dev/null; then
 fi
 
 source ~/powerlevel10k/powerlevel10k.zsh-theme
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
 
 # aliases
 
