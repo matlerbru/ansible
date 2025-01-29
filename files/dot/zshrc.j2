@@ -27,6 +27,8 @@ if ! pgrep -u "$USER" ssh-agent > /dev/null; then
     ssh-add ~/.ssh/id-ansible &>/dev/null
 fi
 
+POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
+
 source ~/powerlevel10k/powerlevel10k.zsh-theme
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
