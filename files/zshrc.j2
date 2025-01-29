@@ -27,6 +27,8 @@ if ! pgrep -u "$USER" ssh-agent > /dev/null; then
     ssh-add ~/.ssh/id-ansible &>/dev/null
 fi
 
+source ~/powerlevel10k/powerlevel10k.zsh-theme
+
 # aliases
 
 alias vim=nvim

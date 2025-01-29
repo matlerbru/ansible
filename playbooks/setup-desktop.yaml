@@ -9,6 +9,9 @@
   - name: Install desktop packages
     include_tasks: ../roles/desktop/install-packages.yaml
 
+  - name: Setup zsh
+    include_tasks: ../roles/generic/setup-zsh.yaml
+
   - name: Install neovim
     include_tasks: ../roles/generic/install-neovim.yaml
 

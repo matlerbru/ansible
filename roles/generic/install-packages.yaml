@@ -1,29 +1,10 @@
-- name: Include generic variables
-  include_vars:
-    file: ../../vars/generic.yaml
-
 - name: Install generic packages
   yum:
     name:
       - curl
       - git
       - btop
-      - zsh
       - yum-utils
       - rsync
     state: present
-  become: true
-
-- name: Copy .zshrc to host
-  ansible.builtin.template:
-    src: ../../files/zshrc.j2
-    dest: "{{ userpath }}/.zshrc"
-    owner: "{{ user }}"
-    group: "{{ user }}"
-  become: true
-
-- name: Set default shell to zsh
-  user:
-    name: mlb
-    shell: /bin/zsh
   become: true

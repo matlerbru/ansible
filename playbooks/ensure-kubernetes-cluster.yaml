@@ -9,6 +9,9 @@
   - name: Install neovim
     include_tasks: ../roles/generic/install-neovim.yaml
 
+  - name: Setup zsh
+    include_tasks: ../roles/generic/setup-zsh.yaml
+
   - name: Add ansiuble ssh keys
     include_tasks: ../roles/generic/add-ssh-ansible-key.yaml
 
@@ -57,6 +60,9 @@
 
   - name: Install neovim
     include_tasks: ../roles/generic/install-neovim.yaml
+
+  - name: Setup zsh
+    include_tasks: ../roles/generic/setup-zsh.yaml
 
   - name: Set hostname
     include_tasks: ../roles/generic/set-hostname.yaml
