@@ -9,14 +9,6 @@
     state: present
   become: true
 
-- name: Copy .zshrc to host
-  ansible.builtin.template:
-    src: ../../files/dot/zshrc.j2
-    dest: "{{ userpath }}/.zshrc"
-    owner: "{{ user }}"
-    group: "{{ user }}"
-  become: true
-
 - name: Set default shell to zsh
   user:
     name: mlb
@@ -33,16 +25,17 @@
 
 - name: install powerlevel10k
   command: |
-    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k"
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git \
+    "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k"
   args:
     creates: ~/-oh-my-zsh/custom/themes/powerlevel10k
   become: true
   become_user: "{{ user }}"
 
-- name: Copy .p10k.zsh to host
-  ansible.builtin.copy:
-    src: ../../files/dot/p10k.zsh
-    dest: "{{ userpath }}/.p10k.zsh"
+- name: Copy .zshrc to host
+  ansible.builtin.template:
+    src: ../../files/dot/zshrc.j2
+    dest: "{{ userpath }}/.zshrc"
     owner: "{{ user }}"
     group: "{{ user }}"
   become: true
