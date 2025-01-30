@@ -2,6 +2,5 @@
   yum:
     name:
       - ansible
-      - wezterm
     state: present
   become: true
