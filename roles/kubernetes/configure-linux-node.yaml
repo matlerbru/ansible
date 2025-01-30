@@ -35,8 +35,6 @@
     line: "fs.inotify.max_user_instances=1024"
     create: yes
   become: true
-  notify:
-    - Apply sysctl changes
 
 - name: Increase file descriptor limit permanently (soft and hard)
   blockinfile:
@@ -45,8 +43,6 @@
       * soft nofile 100000
       * hard nofile 100000
   become: true
-  notify:
-    - Apply limits changes
 
 - name: Ensure pam_limits is enabled
   lineinfile:
@@ -54,16 +50,3 @@
     line: "session required pam_limits.so"
     create: yes
   become: true
-
-  handlers:
-    - name: Apply sysctl changes
-      sysctl:
-        name: fs.inotify.max_user_instances
-        value: "1024"
-        state: present
-        reload: yes
-      become: true
-
-    - name: Apply limits changes
-      command: ulimit -n 100000
-      become: true
