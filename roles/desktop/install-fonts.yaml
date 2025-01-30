@@ -4,5 +4,5 @@
 
 - name: Install powerline fonts
   command: |
-    dnf install powerline-fonts
+    dnf -y install powerline-fonts
   become: true
