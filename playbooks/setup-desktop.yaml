@@ -10,8 +10,7 @@
     include_tasks: ../roles/desktop/install-packages.yaml
 
   - name: Setup wezterm
-    include_tasks: ../roles/generic/setup-wezterm.yaml
-
+    include_tasks: ../roles/desktop/setup-wezterm.yaml
 
   - name: Setup zsh
     include_tasks: ../roles/generic/setup-zsh.yaml
