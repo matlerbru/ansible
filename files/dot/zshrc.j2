@@ -134,3 +134,6 @@ if ! pgrep -u "$USER" ssh-agent > /dev/null; then
     eval "$(ssh-agent -s)" &>/dev/null
     ssh-add ~/.ssh/id-ansible &>/dev/null
 fi
+
+source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+source ./zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
