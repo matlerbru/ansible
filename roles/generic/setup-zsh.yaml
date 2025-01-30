@@ -23,8 +23,16 @@
     shell: /bin/zsh
   become: true
 
+- name: install oh-my-zsh
+  command: |
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  args:
+    creates: ~/.oh-my-zsh
+  become: true
+  become_user: "{{ user }}"
+
 - name: install powerlevel10k
-  command: git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k
+  command: git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k"
   args:
     creates: ~/powerlevel10k
   become: true
