@@ -1,0 +1,6 @@
+- name: Install kitty
+  yum:
+    name:
+      - kitty
+    state: present
+  become: true
