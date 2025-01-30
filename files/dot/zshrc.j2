@@ -1,3 +1,12 @@
+tmux ls &>/dev/null
+if [ $? -eq 0 ]; then
+  # If there are sessions, attach to the previous session
+  tmux attach-session -t $(tmux list-sessions -F '#S' | tail -n 1)
+else
+  # If no sessions, create a new one
+  tmux new-session
+fi
+
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
