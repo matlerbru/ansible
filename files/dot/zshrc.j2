@@ -1,3 +1,6 @@
+
+# This reattaches tmux to last sessions, if there are any, and if it is not in use
+# Else it starts a new tmux session
 tmux ls | grep -v attached &>/dev/null
 if [ $? -eq 0 ]; then
   # If there are sessions, attach to the previous session
