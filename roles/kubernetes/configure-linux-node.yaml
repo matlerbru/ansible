@@ -50,3 +50,15 @@
     line: "session required pam_limits.so"
     create: yes
   become: true
+
+- name: Apply sysctl changes
+  sysctl:
+    name: fs.inotify.max_user_instances
+    value: "1024"
+    state: present
+    reload: yes
+  become: true
+
+- name: Apply limits changes
+  command: ulimit -n 100000
+  become: true
