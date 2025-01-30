@@ -9,6 +9,9 @@
   - name: Install desktop packages
     include_tasks: ../roles/desktop/install-packages.yaml
 
+  - name: Install fonts
+    include_tasks: ../roles/desktop/install-fonts.yaml
+
   - name: Setup kitty
     include_tasks: ../roles/desktop/setup-kitty.yaml
 
