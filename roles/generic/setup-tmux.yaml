@@ -16,3 +16,12 @@
     creates: ~/.tmux/plugins/tpm
   become: true
   become_user: "{{ user }}"
+
+- name: Install catppuccin
+  command: |
+    mkdir -p ~/.config/tmux/plugins/catppuccin
+    git clone -b v2.1.2 https://github.com/catppuccin/tmux.git ~/.config/tmux/plugins/catppuccin/tmux
+  args:
+    creates: ~/.config/tmux/plugins/catppuccin/tmux
+  become: true
+  become_user: "{{ user }}"
