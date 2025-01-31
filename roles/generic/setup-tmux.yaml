@@ -17,11 +17,18 @@
   become: true
   become_user: "{{ user }}"
 
-- name: Install catppuccin
-  command: |
-    mkdir -p ~/.config/tmux/plugins/catppuccin
-    git clone -b v2.1.2 https://github.com/catppuccin/tmux.git ~/.config/tmux/plugins/catppuccin/tmux
-  args:
-    creates: ~/.config/tmux/plugins/catppuccin/tmux
+- name: Create catppuccin directory
+  file:
+    path: ~/.config/tmux/plugins/catppuccin
+    state: directory
+    mode: "0755"
+  become: true
+  become_user: "{{ user }}"
+
+- name: Clone catppuccin tmux plugin
+  git:
+    repo: "https://github.com/catppuccin/tmux.git"
+    dest: "~/.config/tmux/plugins/catppuccin/tmux"
+    version: "v2.1.2"
   become: true
   become_user: "{{ user }}"
