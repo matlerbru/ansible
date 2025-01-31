@@ -9,3 +9,10 @@
     owner: "{{ user }}"
     group: "{{ user }}"
   become: true
+
+- name: Install tpm
+  command: git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+  args:
+    creates: ~/.tmux/plugins/tpm
+  become: true
+  become_user: "{{ user }}"
