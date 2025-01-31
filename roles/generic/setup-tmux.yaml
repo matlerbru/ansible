@@ -10,10 +10,10 @@
     group: "{{ user }}"
   become: true
 
-- name: Install tpm
-  command: git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-  args:
-    creates: ~/.tmux/plugins/tpm
+- name: Clone tpm
+  git:
+    repo: "https://github.com/tmux-plugins/tpm"
+    dest: "~/.tmux/plugins/tpm"
   become: true
   become_user: "{{ user }}"
 
