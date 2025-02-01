@@ -53,3 +53,10 @@
     creates: git clone https://github.com/zsh-users/zsh-syntax-highlighting.git
   become: true
   become_user: "{{ user }}"
+
+- name: Copy .p10k.zsh to host
+  ansible.builtin.template:
+    src: ../../files/dot/p10k.zsh
+    dest: "~/.p10k.zsh"
+  become: true
+  become_user: "{{ user }}"
