@@ -33,3 +33,8 @@
     dest: "~/.config/nvim/autoload/plug.vim"
   become: true
   become_user: "{{ user }}"
+
+- name: Install plugins
+  ansible.builtin.command: nvim --headless +PlugInstall +qal
+  become: true
+  become_user: "{{ user }}"
