@@ -23,8 +23,6 @@
 - name: Ensure vim-plug is installed for Neovim
   ansible.builtin.get_url:
     url: "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
-    dest: "/home/{{ user }}/.config/nvim/autoload/plug.vim"
-    mode: "0644"
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    dest: "~/.config/nvim/autoload/plug.vim"
   become: true
+  become_user: "{{ user }}"
