@@ -35,12 +35,11 @@
   become_user: "{{ user }}"
 
 - name: Ensure Go language server (gopls) is installed
-  ansible.builtin.shell: "go install golang.org/x/tools/gopls@latest"
+  ansible.builtin.command: "go install golang.org/x/tools/gopls@latest"
   environment:
     GOPATH: "~/go"
   become: true
   become_user: "{{ user }}"
-  creates: "~/go/bin/gopls"
 
 - name: Install plugins
   ansible.builtin.command: nvim --headless +PlugInstall +qal
