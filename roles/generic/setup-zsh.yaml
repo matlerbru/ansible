@@ -33,10 +33,9 @@
 - name: Copy .zshrc to host
   ansible.builtin.template:
     src: ../../files/dot/zshrc.j2
-    dest: "{{ userpath }}/.zshrc"
-    owner: "{{ user }}"
-    group: "{{ user }}"
+    dest: "~/.zshrc"
   become: true
+  become_user: "{{ user }}"
 
 - name: add auto suggestions
   command: |
