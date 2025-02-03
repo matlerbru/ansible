@@ -9,3 +9,4 @@ set number
 set relativenumber
 
 inoremap jk <Esc>
+nnoremap e :NERDTreeToggle<CR>
