@@ -9,6 +9,7 @@
 - name: Ensure the ~/.config/nvim directory exists
   ansible.builtin.file:
     path: "~/.config/nvim"
+    state: directory
   become: true
   become_user: "{{ user }}"
 
