@@ -37,7 +37,7 @@
 - name: Ensure Go language server (gopls) is installed
   ansible.builtin.command: "go install golang.org/x/tools/gopls@latest"
   environment:
-    GOPATH: "{{ user_path }}/go"
+    GOPATH: "{{ userpath }}/go"
   become: true
   become_user: "{{ user }}"
 
