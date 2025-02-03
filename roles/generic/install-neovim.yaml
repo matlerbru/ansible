@@ -20,9 +20,11 @@
   become: true
   become_user: "{{ user }}"
 
-- name: Install plugged package manager
-  command: |
-    curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+- name: Ensure vim-plug is installed for Neovim
+  ansible.builtin.get_url:
+    url: "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
+    dest: "/home/{{ user }}/.config/nvim/autoload/plug.vim"
+    mode: "0644"
+    owner: "{{ user }}"
+    group: "{{ user }}"
   become: true
-  become_user: "{{ user }}"
