@@ -9,6 +9,6 @@
 - name: Copy init.vim to host
   ansible.builtin.template:
     src: ../../files/dot/init.vim
-    dest: "~/config/nvim/init.vim"
+    dest: "~/.config/nvim/init.vim"
   become: true
   become_user: "{{ user }}"
