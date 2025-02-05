@@ -12,15 +12,7 @@ lua << EOF
 EOF
 
 autocmd CursorMoved,CursorMovedI * call Center_cursor()
-
-function! Center_cursor()
-    let pos = getpos(".")
-    normal! zz
-    call setpos(".", pos)
-endfunction
-set cursorLine
 set scrolloff=999
-autocmd CursorMoved,CursorMovedI * execute "set colorcolumn=" . virtcol('.')
 
 
 
