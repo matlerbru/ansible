@@ -11,7 +11,9 @@ lua << EOF
   require'lspconfig'.gopls.setup{}
 EOF
 
-autocmd CursorMoved,CursorMovedI * call Center_cursor()
+nnoremap j jzz
+nnoremap k kzz
+
 set scrolloff=999
 
 
