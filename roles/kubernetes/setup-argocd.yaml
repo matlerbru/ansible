@@ -56,3 +56,48 @@
         params:
           server.insecure: true
     release_state: present
+
+- name: Create ArgoCD Metrics Service
+  kubernetes.core.k8s:
+    state: present
+    namespace: argocd
+    definition:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: argocd-metrics
+        namespace: argocd
+        labels:
+          app: argocd-metrics
+      spec:
+        selector:
+          app.kubernetes.io/name: argocd-server
+        ports:
+          - protocol: TCP
+            port: 8082
+            targetPort: 8082
+            name: metrics
+
+- name: Create ArgoCD ServiceMonitor
+  kubernetes.core.k8s:
+    state: present
+    namespace: argocd
+    definition:
+      apiVersion: monitoring.coreos.com/v1
+      kind: ServiceMonitor
+      metadata:
+        name: argocd-metrics
+        namespace: monitoring
+        labels:
+          release: prometheus
+      spec:
+        selector:
+          matchLabels:
+            app: argocd-metrics
+        namespaceSelector:
+          matchNames:
+            - argocd
+        endpoints:
+          - port: metrics
+            interval: 30s
+            path: /metrics
