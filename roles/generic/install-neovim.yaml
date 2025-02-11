@@ -1,3 +1,7 @@
+- name: Include generic variables
+  include_vars:
+    file: ../../vars/generic.yaml
+
 - name: Install neovim package
   yum:
     name:
