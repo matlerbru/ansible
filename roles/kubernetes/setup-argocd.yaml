@@ -87,7 +87,7 @@
       kind: ServiceMonitor
       metadata:
         name: argocd-metrics
-        namespace: monitoring
+        namespace: argocd
         labels:
           release: prometheus
       spec:
