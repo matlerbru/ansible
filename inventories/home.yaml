@@ -24,6 +24,9 @@ all:
         dsk01:
           hostname: dsk01
           kubernetes_access: true
+        dsk02:
+          hostname: dsk02
+          kubernetes_access: true
 
 kubernetes:
   children:
