@@ -1,4 +1,3 @@
-
 metallb:
   addressRange: "192.168.1.200-192.168.1.249"
   peerName: edge-router
@@ -10,13 +9,13 @@ defaultUser: mlb
 podNetworkCidr: 10.244.0.0/16
 
 namespaces:
-- home
-- monitoring
-- torrent
-- unifi
-- devops
-- wireguard
-- object-storage
-- minecraft
-
+  - home
+  - monitoring
+  - torrent
+  - unifi
+  - devops
+  - wireguard
+  - object-storage
+  - minecraft
+  - receipt-tracker-test
 mainControlPlane: srv01.cpl01
