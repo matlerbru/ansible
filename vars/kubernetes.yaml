@@ -17,5 +17,5 @@ namespaces:
   - wireguard
   - object-storage
   - minecraft
-  - receipt-tracker-test
+  - receipt-tracker
 mainControlPlane: srv01.cpl01
