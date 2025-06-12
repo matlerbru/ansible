@@ -29,6 +29,7 @@
 - name: debug ls
   ansible.builtin.command: ls -la {{ playbook_dir }}/
   register: debug_ls
+  delegate_to: localhost
 
 - name: debug ls files
   debug:
