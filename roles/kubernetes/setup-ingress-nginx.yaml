@@ -40,14 +40,14 @@
 
 - name: Generate private key if secret is not present
   community.crypto.openssl_privatekey:
-    path: "{{ playbook_dir }}/../../files/certs/lan.key"
+    path: "{{ playbook_dir }}/files/certs/lan.key"
     size: 4096
   when: local_cert_check.rc != 0
 
 - name: Generate public key if secret is not present
   community.crypto.openssl_publickey:
     path: "{{ playbook_dir }}/../../files/certs/lan.crt"
-    privatekey_path: "{{ playbook_dir }}/../../files/certs/lan.key"
+    privatekey_path: "{{ playbook_dir }}/files/certs/lan.key"
   when: local_cert_check.rc != 0
 
 - name: Create Kubernetes TLS secret
@@ -58,9 +58,9 @@
       apiVersion: v1
       kind: Secret
       metadata:
-        name: lan
+        name: lan-certificate
       type: kubernetes.io/tls
       data:
-        tls.crt: "{{ lookup('file', playbook_dir + '/../../files/certs/lan.crt') | b64encode }}"
-        tls.key: "{{ lookup('file', playbook_dir + '/../../files/certs/lan.key') | b64encode }}"
+        tls.crt: "{{ lookup('file', playbook_dir + '/files/certs/lan.crt') | b64encode }}"
+        tls.key: "{{ lookup('file', playbook_dir + '/files/certs/lan.key') | b64encode }}"
   when: local_cert_check.rc != 0
