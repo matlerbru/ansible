@@ -45,12 +45,14 @@
   when: local_cert_check.rc != 0
 
 - name: Generate self-signed certificate if secret is not present
-  community.crypto.x509_certificate:
+  community.crypto.openssl_privatekey:
     path: "{{ playbook_dir }}/../../files/certs/lan.crt"
     privatekey_path: "{{ playbook_dir }}/../../files/certs/lan.key"
-    common_name: "lan"
     provider: selfsigned
-    days: 3650
+    attributes:
+      common_name: "lan"
+    selfsigned_not_before: "now"
+    selfsigned_not_after: "+3650d"
   when: local_cert_check.rc != 0
 
 - name: Create Kubernetes TLS secret
