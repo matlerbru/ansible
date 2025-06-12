@@ -39,7 +39,7 @@
 - name: Setup pull secret
   kubernetes.core.k8s:
     state: present
-    namespace: "{{ namespaces }}"
+    namespace: "{{ item }}"
     definition:
       apiVersion: v1
       kind: Secret
