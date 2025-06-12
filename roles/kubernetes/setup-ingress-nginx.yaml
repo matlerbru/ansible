@@ -37,6 +37,6 @@
         name: lan-certificate
       type: kubernetes.io/tls
       data:
-        tls.crt: "{{ lookup('file', playbook_dir + 'files/lan/wildcard.lan.crt') | b64encode }}"
-        tls.key: "{{ lookup('file', playbook_dir + 'files/lan/wildcard.lan.key') | b64encode }}"
+        tls.crt: "{{ lookup('file', playbook_dir + '/files/lan/wildcard.lan.crt') | b64encode }}"
+        tls.key: "{{ lookup('file', playbook_dir + '/files/lan/wildcard.lan.key') | b64encode }}"
 
