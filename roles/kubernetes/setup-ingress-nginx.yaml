@@ -44,7 +44,7 @@
   when: local_cert_check.rc != 0
 
 - name: Generate self-signed certificate if secret is not present
-  community.crypto.x509_certificate::
+  community.crypto.x509_certificate:
     path: "{{ playbook_dir }}/../../files/certs/lan.crt"
     privatekey_path: "{{ playbook_dir }}/../../files/certs/lan.key"
     common_name: "lan"
