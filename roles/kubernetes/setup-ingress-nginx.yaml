@@ -28,12 +28,12 @@
 
 - name: Copy public key to host
   ansible.builtin.template:
-    src: ../../files/certificates/wildcard.lan.crt
+    src: ../../files/certificates/lan/wildcard.lan.crt
     dest: "{{ playbook_dir }}/wildcard.lan.crt"
 
 - name: Copy private key to host
   ansible.builtin.template:
-    src: ../../files/certificates/wildcard.lan.crt
+    src: ../../files/certificates/lan/wildcard.lan.key
     dest: "{{ playbook_dir }}/wildcard.lan.key"
 
 - name: Create Kubernetes TLS secret
