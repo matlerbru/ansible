@@ -36,6 +36,15 @@
     src: ../../files/certificates/lan/wildcard.lan.key
     dest: "{{ playbook_dir }}/wildcard.lan.key"
 
+- name: debug ls
+  shell: ls "{{ playbook_dir }}"
+  register: playbook_dir_content
+
+- name: debug
+  debug:
+    msg: "{{ playbook_dir_content.stdout_lines }}"
+
+
 - name: Create Kubernetes TLS secret
   kubernetes.core.k8s:
     state: present
