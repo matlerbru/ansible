@@ -39,4 +39,4 @@
       data:
         tls.crt: "{{ lookup('file', playbook_dir + 'files/lan/wildcard.lan.crt') | b64encode }}"
         tls.key: "{{ lookup('file', playbook_dir + 'files/lan/wildcard.lan.key') | b64encode }}"
-  when: local_cert_check.rc != 0
+
