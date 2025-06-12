@@ -28,7 +28,7 @@
 
 - name: Check if local cert secret exists in Kubernetes
   ansible.builtin.shell: |
-    kubectl get secret -n ingress-nginx lan --ignore-not-found
+    kubectl get secret lan -n ingress-nginx lan --ignore-not-found | grep -q 'lan'
   register: local_cert_check
 
 - name: Ensure certs directory exists
