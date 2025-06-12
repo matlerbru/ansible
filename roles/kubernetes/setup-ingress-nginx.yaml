@@ -25,3 +25,44 @@
         ingressClassResource:
           default: true
     release_state: present
+    
+- name: Check if local cert secret exists in Kubernetes
+  ansible.builtin.shell: |
+    kubectl get secret -n ingress-nginx lan --ignore-not-found
+  register: local_cert_check
+
+- name: Ensure certs directory exists
+  ansible.builtin.file:
+    path: "{{ playbook_dir }}/../../files/certs"
+    state: directory
+  when: local_cert_check.rc != 0
+
+- name: Generate private key if secret is not present
+  community.crypto.openssl_privatekey:
+    path: "{{ playbook_dir }}/../../files/certs/lan.key"
+    size: 2048
+  when: local_cert_check.rc != 0
+
+- name: Generate self-signed certificate if secret is not present
+  community.crypto.openssl_certificate:
+    path: "{{ playbook_dir }}/../../files/certs/lan.crt"
+    privatekey_path: "{{ playbook_dir }}/../../files/certs/lan.key"
+    common_name: "lan"
+    provider: selfsigned
+    days: 3650
+  when: local_cert_check.rc != 0
+
+- name: Create Kubernetes TLS secret
+  kubernetes.core.k8s:
+    state: present
+    namespace: ingress-nginx
+    definition:
+      apiVersion: v1
+      kind: Secret
+      metadata:
+        name: lan
+      type: kubernetes.io/tls
+      data:
+        tls.crt: "{{ lookup('file', playbook_dir + '/../../files/certs/lan.crt') | b64encode }}"
+        tls.key: "{{ lookup('file', playbook_dir + '/../../files/certs/lan.key') | b64encode }}"
+  when: local_cert_check.rc != 0
