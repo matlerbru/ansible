@@ -26,6 +26,14 @@
           default: true
     release_state: present
 
+- name: debug ls
+  ansible.builtin.command: ls -la {{ playbook_dir }}/
+  register: debug_ls
+
+- name: debug ls files
+  debug:
+    msg: "{{ debug_ls.stdout_lines }}"
+
 - name: Create Kubernetes TLS secret
   kubernetes.core.k8s:
     state: present
