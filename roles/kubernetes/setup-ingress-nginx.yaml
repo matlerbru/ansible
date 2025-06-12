@@ -36,19 +36,10 @@
     src: ../../files/certificates/lan/wildcard.lan.key
     dest: "{{ playbook_dir }}/wildcard.lan.key"
 
-- name: debug ls
-  shell: ls "{{ playbook_dir }}"
-  register: playbook_dir_content
-
-- name: debug
-  debug:
-    msg: "{{ playbook_dir_content.stdout_lines }}"
-
-
-- name: Create Kubernetes TLS secret
+- name: Setup pull secret
   kubernetes.core.k8s:
     state: present
-    namespace: ingress-nginx
+    namespace: "{{ namespaces }}"
     definition:
       apiVersion: v1
       kind: Secret
@@ -58,4 +49,4 @@
       data:
         tls.crt: "{{ lookup('file', playbook_dir + '/../files/certificates/lan/wildcard.lan.crt') | b64encode }}"
         tls.key: "{{ lookup('file', playbook_dir + '/../files/certificates/lan/wildcard.lan.key') | b64encode }}"
-
+  loop: "{{ namespaces }}"
