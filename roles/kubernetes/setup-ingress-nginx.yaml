@@ -26,14 +26,15 @@
           default: true
     release_state: present
 
-- name: debug ls
-  ansible.builtin.command: ls -la {{ playbook_dir }}/..
-  register: debug_ls
-  delegate_to: localhost
+- name: Copy public key to host
+  ansible.builtin.template:
+    src: ../../files/certificates/wildcard.lan.crt
+    dest: "{{ playbook_dir }}/wildcard.lan.crt"
 
-- name: debug ls files
-  debug:
-    msg: "{{ debug_ls.stdout_lines }}"
+- name: Copy private key to host
+  ansible.builtin.template:
+    src: ../../files/certificates/wildcard.lan.crt
+    dest: "{{ playbook_dir }}/wildcard.lan.key"
 
 - name: Create Kubernetes TLS secret
   kubernetes.core.k8s:
@@ -46,6 +47,6 @@
         name: lan-certificate
       type: kubernetes.io/tls
       data:
-        tls.crt: "{{ lookup('file', playbook_dir + '/../files/lan/wildcard.lan.crt') | b64encode }}"
-        tls.key: "{{ lookup('file', playbook_dir + '/../files/lan/wildcard.lan.key') | b64encode }}"
+        tls.crt: "{{ lookup('file', playbook_dir + '/wildcard.lan.crt') | b64encode }}"
+        tls.key: "{{ lookup('file', playbook_dir + '/wildcard.lan.key') | b64encode }}"
 
