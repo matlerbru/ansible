@@ -30,6 +30,7 @@
   ansible.builtin.shell: |
     kubectl get secret lan -n ingress-nginx lan --ignore-not-found | grep -q 'lan'
   register: local_cert_check
+  ignore_errors: true
 
 - name: Ensure certs directory exists
   ansible.builtin.file:
