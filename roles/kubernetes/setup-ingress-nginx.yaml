@@ -42,17 +42,18 @@
   community.crypto.openssl_privatekey:
     path: "{{ playbook_dir }}/../../files/certs/lan.key"
     size: 2048
-  when: local_cert_check.rc != 0
-
-- name: Generate self-signed certificate if secret is not present
-  community.crypto.openssl_privatekey:
-    path: "{{ playbook_dir }}/../../files/certs/lan.crt"
-    privatekey_path: "{{ playbook_dir }}/../../files/certs/lan.key"
     provider: selfsigned
     attributes:
       common_name: "lan"
     selfsigned_not_before: "now"
     selfsigned_not_after: "+3650d"
+  when: local_cert_check.rc != 0
+
+- name: Generate public key if secret is not present
+  community.crypto.openssl_privatekey:
+    path: "{{ playbook_dir }}/../../files/certs/lan.crt"
+    privatekey_path: "{{ playbook_dir }}/../../files/certs/lan.key"
+    provider: selfsigned
   when: local_cert_check.rc != 0
 
 - name: Create Kubernetes TLS secret
