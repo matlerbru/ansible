@@ -26,30 +26,6 @@
           default: true
     release_state: present
 
-- name: Check if local cert secret exists in Kubernetes
-  ansible.builtin.shell: |
-    kubectl get secret lan -n ingress-nginx lan --ignore-not-found | grep -q 'lan'
-  register: local_cert_check
-  ignore_errors: true
-
-- name: Ensure certs directory exists
-  ansible.builtin.file:
-    path: "{{ playbook_dir }}/../../files/certs"
-    state: directory
-  when: local_cert_check.rc != 0
-
-- name: Generate private key if secret is not present
-  community.crypto.openssl_privatekey:
-    path: "{{ playbook_dir }}/lan.key"
-    size: 4096
-  when: local_cert_check.rc != 0
-
-- name: Generate public key if secret is not present
-  community.crypto.openssl_publickey:
-    path: "{{ playbook_dir }}/files/certs/lan.crt"
-    privatekey_path: "{{ playbook_dir }}/lan.key"
-  when: local_cert_check.rc != 0
-
 - name: Create Kubernetes TLS secret
   kubernetes.core.k8s:
     state: present
@@ -61,6 +37,6 @@
         name: lan-certificate
       type: kubernetes.io/tls
       data:
-        tls.crt: "{{ lookup('file', playbook_dir + 'lan.crt') | b64encode }}"
-        tls.key: "{{ lookup('file', playbook_dir + 'lan.key') | b64encode }}"
+        tls.crt: "{{ lookup('file', playbook_dir + 'files/lan/wildcard.lan.crt') | b64encode }}"
+        tls.key: "{{ lookup('file', playbook_dir + 'files/lan/wildcard.lan.key') | b64encode }}"
   when: local_cert_check.rc != 0
